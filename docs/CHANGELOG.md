@@ -33,4 +33,4 @@
 - Rulebook examples as tests: Sale (2 BF + 6 VP), black Sale (2 BF + 4 VP), compass payments, shield majorities, Public Figure payment, blue player's final score.
 - Seeded random games for 2–5 players run to the end with no broken invariants (200 random games take about 4 seconds).
 - New literal readings behind rule options: Q14–Q19 in `docs/rules-questions.md`, waiting for Hans.
-- Hans confirmed Q14–Q17 as implemented and decided Q19: paying for Public Figures is optional (`mustPayPublicFiguresWhenAble` now defaults to `false`). Q18 is still open.
+- Hans confirmed Q14–Q17 as implemented and decided Q19: paying for Public Figures is optional (`mustPayPublicFiguresWhenAble` now defaults to `false`). Q18: a disc never moves past the last space of a track. All rules questions are closed again.

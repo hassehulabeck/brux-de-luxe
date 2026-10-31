@@ -92,10 +92,10 @@ Manneken Pis are counted on "each Bonus card earned during this round" (p. 8). A
 The secondary action triggers "when a player chooses an action on the Art Nouveau board, on which an opponent has built a Building tile" (p. 11). Placing an Assistant without performing the action is allowed (p. 5).
 **Decided (Hans):** choosing the space is enough, so the Building owner gets the secondary action even if the action is skipped. Option: `rules.secondaryActionWhenPrimarySkipped`.
 
-### Q18. Advancing past the end of a track (literal)
+### Q18. Advancing past the end of a track (decided by Hans)
 
 The rulebook doesn't say what happens when a Bonus card or Public Figure would move a disc past the last space of the City Hall, Royal Palace or Architect track.
-**Literal reading implemented:** the disc stays on the last space and the advance is lost. No option, because the rulebook offers no other reading.
+**Decided (Hans):** the disc stays on the last space and the advance is lost.
 
 ### Q19. Choosing which Public Figures to leave unpaid (decided by Hans)
 
