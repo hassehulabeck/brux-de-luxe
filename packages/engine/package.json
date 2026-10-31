@@ -1,0 +1,20 @@
+{
+  "name": "@brux/engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pure rules engine and bot AI for Bruxelles 1893. No runtime dependencies, no DOM, no Node APIs.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

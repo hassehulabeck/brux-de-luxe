@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // The engine must run in the browser and in Node alike:
+    // no DOM types and no Node types are available in src/.
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src"]
+}

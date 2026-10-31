@@ -1,0 +1,12 @@
+:root {
+  --color-bg: #faf7f0;
+  --color-text: #2b2620;
+  font-family: system-ui, sans-serif;
+  font-size: 18px;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
