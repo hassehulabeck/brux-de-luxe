@@ -8,7 +8,9 @@
 
 import {
   ACTION_NAMES,
+  BONUS_EFFECT_NAMES,
   BRUSSELS_ACTION_NAMES,
+  COMPASS_TILE_NAMES,
   describeMove,
   loadComponents,
   PUBLIC_FIGURE_NAMES,
@@ -16,16 +18,13 @@ import {
   type GameState,
   type Move,
   type PlayerIndex,
+  type TableEvent,
 } from '@brux/engine';
+import type { SeatConfig } from './session';
 
 const components = loadComponents();
 
-export const BONUS_EFFECT_LABELS: Record<BonusEffect, string> = {
-  cityHall: 'City Hall +1',
-  courthouse: 'Assistant back from the Courthouse',
-  royalPalace: 'Royal Palace +1',
-  architect: 'Architect +1',
-};
+export const BONUS_EFFECT_LABELS: Record<BonusEffect, string> = BONUS_EFFECT_NAMES;
 
 /** "City Hall +1 or Royal Palace +1 · 1 Manneken Pis · 1 VP symbol" */
 export function bonusCardLabel(card: number): string {
@@ -54,14 +53,7 @@ export function stripLabel(id: string): string {
   return strip ? strip.basicSide.map((a) => ACTION_NAMES[a]).join(' · ') : id;
 }
 
-export const COMPASS_TILE_LABELS: Record<string, string> = {
-  wood: 'Wood',
-  stone: 'Stone',
-  iron: 'Iron',
-  anyNoble: 'Any Noble Material',
-  threeBf: '3 BF',
-  empty: 'Empty',
-};
+export const COMPASS_TILE_LABELS: Record<string, string> = COMPASS_TILE_NAMES;
 
 /** A chance outcome as the players would say it. */
 export function chanceLabel(state: GameState, move: Move): string {
@@ -130,6 +122,43 @@ export function botInstruction(
       return `Put a ${color} Building on ${space(move.space)}.`;
     default:
       return `${describeMove(before, move)}.`;
+  }
+}
+
+/**
+ * Something the engine did on its own, as an instruction for the table:
+ * whose marker to move, which piece goes where.
+ */
+export function eventInstruction(event: TableEvent, seats: SeatConfig[]): string {
+  const who = (p: PlayerIndex) => {
+    const seat = seats[p];
+    return seat ? `${seat.name} (${seat.color})` : `Player ${p + 1}`;
+  };
+  switch (event.kind) {
+    case 'secondaryAction': {
+      const start = `Secondary action for ${who(event.owner)}, owner of the ${ACTION_NAMES[event.action]} Building:`;
+      switch (event.action) {
+        case 'workshop':
+          return event.blackWork
+            ? `${start} take a black Work of Art.`
+            : `${start} no black Work of Art is left.`;
+        case 'sale':
+        case 'construction':
+          return `${start} score ${plural(event.vp, 'VP', 'VP')}.`;
+        case 'royalTheater':
+          return `${start} activate one upright Public Figure.`;
+        case 'materials':
+          return `${start} take 1 Noble Material.`;
+        default:
+          return start;
+      }
+    }
+    case 'shieldScored':
+      return `Shield ${event.shield.row}-${event.shield.col}: ${who(event.player)} scores ${plural(event.vp, 'VP', 'VP')}.`;
+    case 'brusselsMajority': {
+      const moves = event.players.length === 1 ? 'moves' : 'each move';
+      return `Brussels majority: ${event.players.map(who).join(' and ')} ${moves} one Assistant from the Brussels board to the Courthouse.`;
+    }
   }
 }
 

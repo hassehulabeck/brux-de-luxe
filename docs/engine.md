@@ -22,6 +22,8 @@ const next = apply(state, move); // a new state; `state` itself never changes
 
 `state.steps` is the engine's to-do list, kept as a stack (the last step runs first). For example, when a player takes a Royal Theater card, the engine pushes "apply the card's effect", "keep or discard it" and "refill the display", in that order. A step either does its work at once (scoring the shields) or sets a pending decision ("Solvay: which material?"). This is how secondary actions happen after the main action, and how the Grand Plaza activates one Public Figure after another.
 
+Steps that change the physical board without a decision (a secondary action, a shield scoring, the Brussels majority) also add a **table event** to `state.events`. The list holds only what happened during the last `apply()`, so the table app can tell the humans what to move on the board.
+
 ## Chance
 
 Stacks and decks are stored as their contents only, never in a shuffled order, so there is no hidden deck order for a bot to peek at. Whenever something is drawn, the state asks with `pending: { kind: 'chance', event }`, and a **ChanceOracle** answers with a move such as `{ kind: 'revealStockExchangeCard', card: 4 }`.

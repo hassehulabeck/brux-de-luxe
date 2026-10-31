@@ -7,7 +7,7 @@
 import { defineStore } from 'pinia';
 import { markRaw } from 'vue';
 import { describeMove, type Bot, type GameState, type Move } from '@brux/engine';
-import { botInstruction } from '../game/labels';
+import { botInstruction, eventInstruction } from '../game/labels';
 import {
   botDecision,
   botToAct,
@@ -45,6 +45,11 @@ export const useGameStore = defineStore('game', {
     session: null as Session | null,
     bots: [] as (Bot | null)[],
     botTurn: null as BotTurn | null,
+    /**
+     * What the engine did on its own after a human or chance move (a shield
+     * scoring, a secondary action...), for the table to copy on the board.
+     */
+    notes: [] as string[],
     error: null as string | null,
   }),
 
@@ -84,6 +89,7 @@ export const useGameStore = defineStore('game', {
         this.error = error instanceof Error ? error.message : String(error);
         return;
       }
+      this.notes = current(this.session).events.map((e) => eventInstruction(e, this.seats));
       this.save();
       this.runBots();
     },
@@ -106,15 +112,24 @@ export const useGameStore = defineStore('game', {
         const instruction = botInstruction(step.state, current(next), step.move, player, color);
         this.botTurn ??= { player, plan: step.decision.plan ?? null, steps: [] };
         // The reason starts by naming the move, which the instruction already does.
-        const named = `${describeMove(step.state, step.move)}: `;
-        const reason = step.decision.reason.startsWith(named)
-          ? step.decision.reason.slice(named.length)
-          : step.decision.reason;
+        // If only the plan is left ("(Builder)."), the plan badge says it already.
+        const named = describeMove(step.state, step.move);
+        let reason = step.decision.reason;
+        if (reason.startsWith(named)) reason = reason.slice(named.length).replace(/^:\s*/, '');
+        if (/^\s*\([^)]*\)\.?$/.test(reason)) reason = '';
         this.botTurn.steps.push({ instruction, reason });
+        // Things the engine did on its own because of this move.
+        for (const event of current(next).events) {
+          this.botTurn.steps.push({ instruction: eventInstruction(event, this.seats), reason: '' });
+        }
         this.botTurn.plan = step.decision.plan ?? this.botTurn.plan;
         this.session = markRaw(next);
       }
       this.save();
+    },
+
+    dismissNotes() {
+      this.notes = [];
     },
 
     /** The humans have carried out the bot's moves on the board. */
@@ -127,6 +142,7 @@ export const useGameStore = defineStore('game', {
       if (!this.session) return;
       this.session = markRaw(undo(this.session));
       this.botTurn = null;
+      this.notes = [];
       this.save();
     },
 
@@ -134,6 +150,7 @@ export const useGameStore = defineStore('game', {
       if (!this.session) return;
       this.session = markRaw(redo(this.session));
       this.botTurn = null;
+      this.notes = [];
       this.save();
       this.runBots();
     },
@@ -141,6 +158,7 @@ export const useGameStore = defineStore('game', {
     quit() {
       this.session = null;
       this.botTurn = null;
+      this.notes = [];
       try {
         localStorage.removeItem(STORAGE_KEY);
       } catch {
@@ -152,6 +170,7 @@ export const useGameStore = defineStore('game', {
       this.session = markRaw(session);
       this.bots = markRaw(createBots(session.config));
       this.botTurn = null;
+      this.notes = [];
       this.error = null;
       this.save();
       this.runBots();

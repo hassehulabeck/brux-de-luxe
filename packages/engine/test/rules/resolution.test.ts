@@ -38,7 +38,7 @@ describe('1. bids (p. 8)', () => {
     });
     // Player 1 bid 3 in column 0 against 2.
     expect(state.pending).toEqual({ kind: 'resolveBonus', player: 1 });
-    expect(state.round.bonusWon).toEqual([{ player: 1, card: CITY_HALL, tied: false }]);
+    expect(state.round.bonusWon).toEqual([{ player: 1, card: CITY_HALL, column: 0, tied: false }]);
   });
 
   it('a tie gives every tied player the central power, but nobody keeps the card', () => {
@@ -47,8 +47,8 @@ describe('1. bids (p. 8)', () => {
       placeAssistant(draft, { row: 1, col: 1 }, 2, 2);
     });
     expect(state.round.bonusWon).toEqual([
-      { player: 1, card: ROYAL_PALACE, tied: true },
-      { player: 2, card: ROYAL_PALACE, tied: true },
+      { player: 1, card: ROYAL_PALACE, column: 1, tied: true },
+      { player: 2, card: ROYAL_PALACE, column: 1, tied: true },
     ]);
     // Q10: a tied card can't be tucked.
     expect(legalMoves(state)).toEqual([{ kind: 'useBonus', card: 0, choice: null }]);
@@ -183,6 +183,18 @@ describe('4. shield majorities (p. 9)', () => {
     const done = finishBonuses(everyonePasses(state));
     expect(done.players[1]!.vp).toBe(3 * 2);
     expect(done.players[2]!.vp).toBe(2 * 4);
+    // The table is told, shield by shield, whose VP marker to move.
+    const scored = done.events.filter((e) => e.kind === 'shieldScored');
+    expect(scored).toHaveLength(5);
+    expect(scored).toEqual(
+      expect.arrayContaining([
+        { kind: 'shieldScored', shield: { row: 2, col: 2 }, player: 1, vp: 2 },
+        { kind: 'shieldScored', shield: { row: 2, col: 3 }, player: 1, vp: 2 },
+        { kind: 'shieldScored', shield: { row: 2, col: 3 }, player: 2, vp: 4 },
+        { kind: 'shieldScored', shield: { row: 2, col: 4 }, player: 1, vp: 2 },
+        { kind: 'shieldScored', shield: { row: 2, col: 4 }, player: 2, vp: 4 },
+      ]),
+    );
   });
 
   it('2 players: nobody scores if the neutral color wins, but a tie with it scores (p. 12)', () => {
@@ -222,11 +234,13 @@ describe('5. Brussels majority (p. 9)', () => {
     state = play(state, { kind: 'chooseParkAction', action: 'materials' }, { kind: 'skipAction' });
     const done = finishBonuses(everyonePasses(state));
     expect(done.players.map((p) => p.assistants.courthouse)).toEqual([3, 3, 2]);
+    expect(done.events).toContainEqual({ kind: 'brusselsMajority', players: [0, 1] });
   });
 
   it('nobody goes to the Courthouse when nobody used the Brussels board (Q11)', () => {
     const done = finishBonuses(everyonePasses(gameAtFirstTurn()));
     expect(done.players.map((p) => p.assistants.courthouse)).toEqual([2, 2, 2]);
+    expect(done.events.some((e) => e.kind === 'brusselsMajority')).toBe(false);
   });
 });
 

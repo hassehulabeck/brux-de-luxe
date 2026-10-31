@@ -1,0 +1,882 @@
+{
+  "version": 1,
+  "config": {
+    "seats": [
+      {
+        "name": "Hans",
+        "color": "yellow",
+        "bot": null
+      },
+      {
+        "name": "Botty",
+        "color": "red",
+        "bot": {
+          "difficulty": "normal"
+        }
+      },
+      {
+        "name": "Harry Kane",
+        "color": "green",
+        "bot": {
+          "difficulty": "hard"
+        }
+      }
+    ],
+    "seed": 718566
+  },
+  "moves": [
+    {
+      "kind": "revealStrips",
+      "order": ["3", "4", "5", "1", "2"]
+    },
+    {
+      "kind": "revealCompassTiles",
+      "tiles": ["anyNoble", "threeBf", "wood", "empty", "iron", "stone"]
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "edouardEmpain",
+        "cost": 2
+      }
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "edouardEmpain",
+        "cost": 2
+      }
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "ernestSolvay",
+        "cost": 2
+      }
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "henryVanDeVelde",
+        "cost": 4
+      }
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["pink"]
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["yellow"]
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["green"]
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 10
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 9
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 6
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 2
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 8
+    },
+    {
+      "kind": "revealStockExchangeCard",
+      "card": 0
+    },
+    {
+      "kind": "chooseShield",
+      "shield": {
+        "row": 3,
+        "col": 4
+      }
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 3,
+        "col": 2
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["stone", "stone"]
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 4,
+        "col": 3
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["stone", "iron"]
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 4,
+        "col": 0
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["yellow"]
+    },
+    {
+      "kind": "keepWork",
+      "color": "yellow"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 3,
+        "col": 3
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "payConstruction",
+      "payment": {
+        "wood": 0,
+        "stone": 2,
+        "iron": 0,
+        "bf": 0,
+        "jokers": 0
+      }
+    },
+    {
+      "kind": "turnNeedle",
+      "needle": 0
+    },
+    {
+      "kind": "placeBuilding",
+      "space": {
+        "row": 2,
+        "col": 2
+      }
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 2,
+        "col": 0
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takePublicFigure",
+      "position": 0
+    },
+    {
+      "kind": "keepPublicFigure"
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "mauriceMaeterlinck",
+        "cost": 5
+      }
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 3,
+        "col": 0
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "moveCursor",
+      "to": {
+        "row": 5,
+        "col": 3
+      }
+    },
+    {
+      "kind": "sellWork",
+      "color": "yellow"
+    },
+    {
+      "kind": "placeInShop",
+      "slot": 0
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "grandPlaza"
+    },
+    {
+      "kind": "activatePublicFigure",
+      "index": 0
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "market"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 3,
+        "col": 1
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takePublicFigure",
+      "position": 3
+    },
+    {
+      "kind": "keepPublicFigure"
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "henryVanDeVelde",
+        "cost": 4
+      }
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 2,
+        "col": 1
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["wood", "wood"]
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "stockExchange"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 4,
+        "col": 1
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "moveCursor",
+      "to": {
+        "row": 5,
+        "col": 2
+      }
+    },
+    {
+      "kind": "sellWork",
+      "color": "green"
+    },
+    {
+      "kind": "placeInShop",
+      "slot": 1
+    },
+    {
+      "kind": "pass"
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "park"
+    },
+    {
+      "kind": "chooseParkAction",
+      "action": "materials"
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["stone", "stone"]
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 4,
+        "col": 2
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takePublicFigure",
+      "position": 0
+    },
+    {
+      "kind": "keepPublicFigure"
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "henryVanDeVelde",
+        "cost": 4
+      }
+    },
+    {
+      "kind": "pass"
+    },
+    {
+      "kind": "pass"
+    },
+    {
+      "kind": "useBonus",
+      "card": 3,
+      "choice": null
+    },
+    {
+      "kind": "useBonus",
+      "card": 0,
+      "choice": "courthouse"
+    },
+    {
+      "kind": "useBonus",
+      "card": 0,
+      "choice": "architect"
+    },
+    {
+      "kind": "useBonus",
+      "card": 0,
+      "choice": null
+    },
+    {
+      "kind": "useBonus",
+      "card": 0,
+      "choice": null
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "edouardEmpain",
+        "cost": 2
+      }
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 0
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 3
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 2
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 1
+    },
+    {
+      "kind": "revealBonusCard",
+      "card": 5
+    },
+    {
+      "kind": "revealStockExchangeCard",
+      "card": 1
+    },
+    {
+      "kind": "chooseShield",
+      "shield": {
+        "row": 4,
+        "col": 1
+      }
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "grandPlaza"
+    },
+    {
+      "kind": "activatePublicFigure",
+      "index": 0
+    },
+    {
+      "kind": "activatePublicFigure",
+      "index": 1
+    },
+    {
+      "kind": "activatePublicFigure",
+      "index": 2
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 1,
+        "col": 2
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["blue", "green"]
+    },
+    {
+      "kind": "keepWork",
+      "color": "blue"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 2,
+        "col": 1
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["stone", "stone"]
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 3,
+        "col": 4
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["pink"]
+    },
+    {
+      "kind": "keepWork",
+      "color": "pink"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 1,
+        "col": 4
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takePublicFigure",
+      "position": 0
+    },
+    {
+      "kind": "discardPublicFigure"
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "ernestSolvay",
+        "cost": 2
+      }
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 1,
+        "col": 1
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "payConstruction",
+      "payment": {
+        "wood": 0,
+        "stone": 1,
+        "iron": 0,
+        "bf": 3,
+        "jokers": 0
+      }
+    },
+    {
+      "kind": "turnNeedle",
+      "needle": 1
+    },
+    {
+      "kind": "placeBuilding",
+      "space": {
+        "row": 2,
+        "col": 4
+      }
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 4,
+        "col": 3
+      },
+      "bid": 2
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["iron", "iron"]
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 3,
+        "col": 2
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "takeMaterials",
+      "materials": ["wood", "wood"]
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "market"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 2,
+        "col": 3
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "revealWorks",
+      "colors": ["pink"]
+    },
+    {
+      "kind": "keepWork",
+      "color": "pink"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 1,
+        "col": 3
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "moveCursor",
+      "to": {
+        "row": 5,
+        "col": 1
+      }
+    },
+    {
+      "kind": "sellWork",
+      "color": "blue"
+    },
+    {
+      "kind": "placeInShop",
+      "slot": 1
+    },
+    {
+      "kind": "takeBrusselsAction",
+      "action": "stockExchange"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 2,
+        "col": 4
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "moveCursor",
+      "to": {
+        "row": 3,
+        "col": 1
+      }
+    },
+    {
+      "kind": "sellWork",
+      "color": "pink"
+    },
+    {
+      "kind": "placeInShop",
+      "slot": 1
+    },
+    {
+      "kind": "pass"
+    },
+    {
+      "kind": "pass"
+    },
+    {
+      "kind": "placeAssistant",
+      "space": {
+        "row": 4,
+        "col": 4
+      },
+      "bid": 1
+    },
+    {
+      "kind": "performAction"
+    },
+    {
+      "kind": "payConstruction",
+      "payment": {
+        "wood": 0,
+        "stone": 0,
+        "iron": 0,
+        "bf": 0,
+        "jokers": 2
+      }
+    },
+    {
+      "kind": "turnNeedle",
+      "needle": 0
+    },
+    {
+      "kind": "placeBuilding",
+      "space": {
+        "row": 4,
+        "col": 2
+      }
+    },
+    {
+      "kind": "pass"
+    },
+    {
+      "kind": "useBonus",
+      "card": 1,
+      "choice": null
+    },
+    {
+      "kind": "useBonus",
+      "card": 0,
+      "choice": null
+    },
+    {
+      "kind": "tuckBonus",
+      "card": 1,
+      "row": 4
+    },
+    {
+      "kind": "tuckBonus",
+      "card": 0,
+      "row": 3
+    },
+    {
+      "kind": "revealPublicFigure",
+      "card": {
+        "figure": "mauriceMaeterlinck",
+        "cost": 5
+      }
+    }
+  ],
+  "sources": [
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "human",
+    "human",
+    "human",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "chance",
+    "bot",
+    "human",
+    "human",
+    "human",
+    "human",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "chance",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "chance",
+    "human",
+    "human",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "chance",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "human",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "chance",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "human",
+    "chance",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "chance",
+    "bot",
+    "human",
+    "human",
+    "human",
+    "human",
+    "chance",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "human",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "chance",
+    "bot",
+    "human",
+    "human",
+    "human",
+    "human",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "bot",
+    "human",
+    "bot",
+    "bot",
+    "bot",
+    "chance"
+  ]
+}

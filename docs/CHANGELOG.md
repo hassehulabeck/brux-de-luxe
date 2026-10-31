@@ -77,3 +77,14 @@
 - Tests: session (undo/redo, save/load, illegal moves), wording, and a store test that plays a whole game with one human and two bots.
 - Checked in a real browser (headless Chrome): setup wizard, setup prompts, a human turn with a bid, and a bot turn with a draw in the middle. No console errors.
 - **Still to do for "done":** play a complete game at a real table with 1 human and 2 bots, without workarounds (PLAN.md Phase 6).
+
+## Phase 6 follow-up: first table game (2026-10-31)
+
+Hans played two rounds with 1 human and 2 bots. The export is kept as a test fixture (`apps/web/test/fixtures/table-game-2026-10-31.json`).
+
+- **Secondary actions the table never saw.** A bot's Sale on another bot's Building gave the owner 1 VP, but nobody was told to move the marker. The engine now records `state.events` (table events) for secondary actions, shield scorings and the Brussels majority. The app shows them in the bot's turn, or in an "Also on the board" box after a human move.
+- **Shield majorities** are now listed one shield at a time ("Shield 3-4: Hans (yellow) scores 1 VP"), so nobody has to count them by hand.
+- **Bonus cards** remember the column they lay under. The app groups the choices per card ("Column 3: Architect +1 · 1 Manneken Pis · 1 VP symbol"), and bot instructions name the column.
+- **"Only Skip" explained.** The second Building was refused correctly: the needles pointed at 3 BF and Any Noble Material, so the Building cost 1 Noble Material and 3 BF, and the bid left 2 BF. The engine's new `cannotPerformReason()` says that next to **Skip**.
+- Bot reasons that only repeat the instruction and the plan are hidden.
+- No AI behaviour changed (the events are not read by the bots), so no new tournament.

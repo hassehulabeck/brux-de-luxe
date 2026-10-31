@@ -2,11 +2,14 @@
  * Short English descriptions of moves, for bot reasons and decision logs.
  */
 
-import { PUBLIC_FIGURE_NAMES } from '../data/rulebook';
-import type { ArtNouveauAction, BonusEffect, BrusselsAction } from '../data/types';
-import { assertNever } from '../rules/helpers';
+import { PUBLIC_FIGURE_NAMES, ROYAL_THEATER_COSTS } from '../data/rulebook';
+import type { ArtNouveauAction, BonusEffect, BrusselsAction, CompassTile } from '../data/types';
+import { affordablePayments, buildingSpaces, canPerform } from '../rules/actions';
+import { needleTiles } from '../rules/compass';
+import { bonusType } from '../rules/resolution';
+import { assertNever, nextBuildingRow, player } from '../rules/helpers';
 import type { ConstructionPayment, Move } from '../rules/moves';
-import type { GameState } from '../state/types';
+import type { GameState, PlayerIndex } from '../state/types';
 
 export const ACTION_NAMES: Record<ArtNouveauAction, string> = {
   workshop: 'Workshop',
@@ -23,7 +26,16 @@ export const BRUSSELS_ACTION_NAMES: Record<BrusselsAction, string> = {
   grandPlaza: 'Grand Plaza',
 };
 
-const BONUS_EFFECT_NAMES: Record<BonusEffect, string> = {
+export const COMPASS_TILE_NAMES: Record<CompassTile, string> = {
+  wood: 'Wood',
+  stone: 'Stone',
+  iron: 'Iron',
+  anyNoble: 'Any Noble Material',
+  threeBf: '3 BF',
+  empty: 'Empty',
+};
+
+export const BONUS_EFFECT_NAMES: Record<BonusEffect, string> = {
   cityHall: 'City Hall +1',
   courthouse: 'Assistant back from the Courthouse',
   royalPalace: 'Royal Palace +1',
@@ -116,9 +128,11 @@ export function describeMove(state: GameState, move: Move): string {
     case 'stopActivating':
       return 'Stop activating Public Figures';
     case 'useBonus':
-      return move.choice ? `Bonus card: ${BONUS_EFFECT_NAMES[move.choice]}` : 'Use the Bonus card';
+      return move.choice
+        ? `${bonusCard(state, move.card)}: ${BONUS_EFFECT_NAMES[move.choice]}`
+        : `${bonusCard(state, move.card)}: ${bonusPower(state, move.card)}`;
     case 'tuckBonus':
-      return `Tuck the Bonus card under row ${move.row}`;
+      return `${bonusCard(state, move.card)}: tuck it under row ${move.row}`;
     case 'payPublicFigures':
       return move.unpaid.length === 0
         ? 'Pay for every Public Figure'
@@ -126,4 +140,75 @@ export function describeMove(state: GameState, move: Move): string {
     default:
       return assertNever(move);
   }
+}
+
+/** "Column 2 Bonus card": where the card lay, since a player can win more than one. */
+function bonusCard(state: GameState, index: number): string {
+  const won = state.round.bonusWon[index];
+  return won ? `Column ${won.column + 1} Bonus card` : 'Bonus card';
+}
+
+/** "City Hall +1", or "Architect +1 and Architect +1" for a double card. */
+function bonusPower(state: GameState, index: number): string {
+  const won = state.round.bonusWon[index];
+  const power = won ? bonusType(won.card).power : null;
+  if (power?.kind === 'single') return BONUS_EFFECT_NAMES[power.effect];
+  if (power?.kind === 'double')
+    return power.effects.map((e) => BONUS_EFFECT_NAMES[e]).join(' and ');
+  return 'use its power';
+}
+
+/**
+ * Why a player can't carry out an action, or null if they can. The table
+ * app shows it next to "Skip the action", so nobody is left wondering.
+ */
+export function cannotPerformReason(
+  state: GameState,
+  owner: PlayerIndex,
+  action: ArtNouveauAction,
+): string | null {
+  if (canPerform(state, owner, action)) return null;
+  const p = player(state, owner);
+  switch (action) {
+    case 'workshop':
+    case 'materials':
+      return null;
+    case 'sale':
+      return 'You have no work of a color that is not already showing in the shop.';
+    case 'royalTheater': {
+      const cheapest = cheapestFigure(state);
+      return cheapest === null
+        ? 'There is no Public Figure in the Royal Theater.'
+        : `You have ${p.bf} BF and the cheapest Public Figure costs ${cheapest} BF.`;
+    }
+    case 'construction': {
+      const row = nextBuildingRow(p);
+      if (!row) return 'You have built all your Buildings.';
+      if (buildingSpaces(state).length === 0) return 'There is no empty space for a Building.';
+      if (affordablePayments(state, owner).length > 0) return null;
+      const [a, b] = needleTiles(state).map((tile) => COMPASS_TILE_NAMES[tile]);
+      const both = a === 'Empty' || b === 'Empty' ? '' : ', using both';
+      return (
+        `The needles point at ${a} and ${b}: your next Building costs ` +
+        `${row.constructionUnits} units${both}. You have ${resources(state, owner)}.`
+      );
+    }
+    default:
+      return assertNever(action);
+  }
+}
+
+function cheapestFigure(state: GameState): number | null {
+  const costs = state.royalTheater.display.flatMap((card, position) =>
+    card ? [ROYAL_THEATER_COSTS[position] ?? 0] : [],
+  );
+  return costs.length ? Math.min(...costs) : null;
+}
+
+/** "2 wood, 2 BF and no Jokers" */
+function resources(state: GameState, owner: PlayerIndex): string {
+  const p = player(state, owner);
+  const nobles = payment({ ...p.nobles, bf: 0, jokers: 0 });
+  const jokers = p.jokers === 0 ? 'no Jokers' : `${p.jokers} Joker${p.jokers > 1 ? 's' : ''}`;
+  return `${nobles || 'no Noble Materials'}, ${p.bf} BF and ${jokers}`;
 }

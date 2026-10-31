@@ -99,6 +99,8 @@ export interface WonBonusCard {
   player: PlayerIndex;
   /** Index into components.bonusCards. */
   card: number;
+  /** The Bonus strip column (0–4) it lay under, so the table can find it. */
+  column: number;
   /** Won in a tie: central power only, the card is already discarded (p. 8). */
   tied: boolean;
 }
@@ -190,7 +192,29 @@ export interface GameState {
   pending: Pending | null;
 
   final: FinalScore[] | null;
+
+  /**
+   * What the engine did on its own during the last apply(), for the humans
+   * to copy on the physical board. Emptied at the start of every apply().
+   */
+  events: TableEvent[];
 }
+
+/**
+ * Something the engine resolved without a decision, that changes the
+ * physical board: a secondary action, a shield scoring, the Brussels majority.
+ */
+export type TableEvent =
+  | {
+      kind: 'secondaryAction';
+      /** The Building owner who gets the secondary action. */
+      owner: PlayerIndex;
+      action: ArtNouveauAction;
+      vp: number;
+      blackWork: boolean;
+    }
+  | { kind: 'shieldScored'; shield: Shield; player: PlayerIndex; vp: number }
+  | { kind: 'brusselsMajority'; players: PlayerIndex[] };
 
 // ---------------------------------------------------------------------------
 // Chance events: resolved by a ChanceOracle (seeded RNG, or the table).

@@ -79,6 +79,14 @@ function quit() {
     <p v-if="game.error" class="error">{{ game.error }}</p>
 
     <div class="layout">
+      <section v-if="game.notes.length" class="notes card">
+        <h2>Also on the board</h2>
+        <ul>
+          <li v-for="(note, i) in game.notes" :key="i">{{ note }}</li>
+        </ul>
+        <button class="big" @click="game.dismissNotes()">Done</button>
+      </section>
+
       <section class="panel card">
         <GameOver v-if="state.phase === 'gameOver'" :state="state" :seats="game.seats" />
         <BotTurnCard
@@ -163,8 +171,21 @@ function quit() {
   padding: 0.75rem;
   grid-template-columns: minmax(0, 3fr) minmax(16rem, 2fr);
   grid-template-areas:
+    'notes notes'
     'panel panel'
     'board players';
+}
+.notes {
+  grid-area: notes;
+  border: 2px solid var(--color-accent);
+}
+.notes h2 {
+  margin: 0;
+}
+.notes li {
+  margin: 0.4rem 0;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 .panel {
   grid-area: panel;
@@ -180,7 +201,7 @@ function quit() {
 @media (max-width: 900px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: 'panel' 'board' 'players';
+    grid-template-areas: 'notes' 'panel' 'board' 'players';
   }
 }
 </style>
