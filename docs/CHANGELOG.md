@@ -23,3 +23,13 @@
 - Hans confirmed Q3 (Park gives no secondary action), Q6 (a Joker replaces a unit of any type), Q7 (money is unlimited), Q8 (stack rebuild) and Q11 (no Courthouse when nobody used Brussels).
 - Hans answered Q9 (neutral Assistants return to their owners at the end of the round) and Q13 (no house rules). All rules questions are now closed.
 - Hans transcribed the Action strips, Stock Exchange cards, Bonus cards, Public Figure deck (3 copies each), Works of Art and Exhibition years. Two typos fixed after validation ("architecht", and double-power cards using `options` instead of `effects`). Hans confirmed the starting Brugmann cost (1 BF). All component data is now complete.
+
+## Phase 2: Rules engine (2026-10-31)
+
+- `newGame()`, `legalMoves()` and `apply()`: the full game from setup to final scoring, for 2–5 players (2-player neutral Assistants included). How it works: `docs/engine.md`.
+- Pending decisions and a step stack make multi-step actions (Sale, Construction, Royal Theater, Grand Plaza, Bonus cards, secondary actions) a chain of small decisions.
+- Chance goes through a `ChanceOracle`. Stacks and decks hold no order, so there is no hidden information for bots to peek at. `seededOracle(seed)` for tests and the simulator.
+- `assertInvariants()` checks component conservation after every move. `visibleState()` hides other players' Workshop draws.
+- Rulebook examples as tests: Sale (2 BF + 6 VP), black Sale (2 BF + 4 VP), compass payments, shield majorities, Public Figure payment, blue player's final score.
+- Seeded random games for 2–5 players run to the end with no broken invariants (200 random games take about 4 seconds).
+- New literal readings behind rule options: Q14–Q19 in `docs/rules-questions.md`, waiting for Hans.

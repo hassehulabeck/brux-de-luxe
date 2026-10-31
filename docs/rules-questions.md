@@ -72,6 +72,36 @@ Appendix 3 (p. 12) answers most of this. Neutral Assistants have no bid, so they
 Are the 5 starting Georges Brugmann cards part of the 26 Public Figure cards, and are there more Brugmann cards in the shuffled deck? This affects the deck composition (see the data entry guide).
 **Decided (Hans):** the Brugmann cards are only dealt at the start of the game, one to each player. Unused ones go back to the box and are never in the deck. So the deck has 26 − 5 = 21 cards and no Brugmann.
 
+### Q14. Tuck row 4 at the end of the game: which Assistants count? (literal)
+
+Row 4 scores "each Assistant pawn beyond the second in his possession ... Assistant pawns in the Courthouse do not count" (p. 9). The game ends right after the Brussels majority, skipping the End of Turn phase (p. 10), so Assistants placed in round 5 are still on the boards.
+**Literal reading implemented:** every Assistant not in the Courthouse counts, including those still on the boards. Option: `rules.tuckRow4CountsAssistantsOnBoards` (set to `false` to count only the Assistants in the player's supply).
+
+### Q15. New first player on a Manneken Pis tie (literal)
+
+"The tied player who is the first one clockwise from the current first player becomes the new first player" (p. 8). Does the search start with the current first player (who then keeps the pawn if tied) or with the player to their left?
+**Literal reading implemented:** it starts with the current first player. Option: `rules.firstPlayerTieIncludesCurrent` (set to `false` to start with the player to their left).
+
+### Q16. Do tied Bonus cards count for Manneken Pis? (literal)
+
+Manneken Pis are counted on "each Bonus card earned during this round" (p. 8). A tied card gives each tied player its central power but is discarded (p. 8).
+**Literal reading implemented:** a tied card is not earned, so its Manneken Pis don't count. Option: `rules.tiedBonusCardsCountMannekenPis`.
+
+### Q17. Secondary action when the active player skips the main action (literal)
+
+The secondary action triggers "when a player chooses an action on the Art Nouveau board, on which an opponent has built a Building tile" (p. 11). Placing an Assistant without performing the action is allowed (p. 5).
+**Literal reading implemented:** choosing the space is enough, so the Building owner gets the secondary action even if the action is skipped. Option: `rules.secondaryActionWhenPrimarySkipped`.
+
+### Q18. Advancing past the end of a track (literal)
+
+The rulebook doesn't say what happens when a Bonus card or Public Figure would move a disc past the last space of the City Hall, Royal Palace or Architect track.
+**Literal reading implemented:** the disc stays on the last space and the advance is lost. No option, because the rulebook offers no other reading.
+
+### Q19. Choosing which Public Figures to leave unpaid (literal)
+
+"Each player must pay the amounts indicated on the Public Figure cards that he kept. For each Public Figure card he doesn't pay, the player loses the card and 5 VP" (p. 10). In the example, green chooses which card to give up.
+**Literal reading implemented:** a player chooses, but a card may only stay unpaid if the money left after paying the others can't cover it. Option: `rules.mustPayPublicFiguresWhenAble` (set to `false` to let players leave any cards unpaid, for example to keep BF for tuck row 1).
+
 ## House rules
 
 ### Q13. Any house rules the group uses? (decided by Hans)
