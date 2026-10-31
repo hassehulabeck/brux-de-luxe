@@ -1,5 +1,5 @@
 {
-  "startingBrugmannCost": "TODO_DATA",
+  "startingBrugmannCost": 1,
   "deck": [
     { "figure": "georgesBrugmann", "costs": [] },
     { "figure": "ernestSolvay", "costs": [2, 2, 2] },
