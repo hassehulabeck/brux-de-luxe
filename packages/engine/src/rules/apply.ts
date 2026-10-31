@@ -43,6 +43,15 @@ export function apply(state: GameState, move: Move): GameState {
       `Illegal move ${JSON.stringify(move)} for pending ${JSON.stringify(state.pending)}`,
     );
   }
+  return applyLegalMove(state, move);
+}
+
+/**
+ * apply() without the legality check, for a move taken straight from
+ * legalMoves(state). Bots use it to look ahead quickly. Anything else
+ * (the UI, game logs) should use apply().
+ */
+export function applyLegalMove(state: GameState, move: Move): GameState {
   const draft = cloneState(state);
   const pending = draft.pending!;
   draft.pending = null;

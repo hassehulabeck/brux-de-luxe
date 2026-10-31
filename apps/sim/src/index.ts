@@ -1,12 +1,24 @@
-import { ENGINE_NAME } from '@brux/engine';
+import { parseSimArgs, UsageError } from './args';
+import { runMatch } from './match';
+import { formatReport } from './report';
 
-// Placeholder until Phase 3. It shows that the sim can import the engine
-// and receive CLI arguments. Both `pnpm sim --games 10` and
-// `pnpm sim -- --games 10` work, so a leading `--` is dropped.
-const rawArgs = process.argv.slice(2);
-const args = rawArgs[0] === '--' ? rawArgs.slice(1) : rawArgs;
-
-console.log(`${ENGINE_NAME}: simulator not implemented yet (Phase 3).`);
-if (args.length > 0) {
-  console.log(`Arguments received: ${args.join(' ')}`);
+try {
+  const options = parseSimArgs(process.argv.slice(2));
+  const step = Math.max(1, Math.floor(options.games / 20));
+  const result = runMatch(options, (game) => {
+    if ((game + 1) % step === 0) process.stderr.write(`\r${game + 1}/${options.games} games`);
+  });
+  process.stderr.write('\r\x1b[K');
+  console.log(formatReport(result));
+  if (result.errors.length > 0) process.exitCode = 1;
+} catch (error) {
+  if (
+    error instanceof UsageError ||
+    (error as { code?: string }).code?.startsWith('ERR_PARSE_ARGS')
+  ) {
+    console.error((error as Error).message);
+    process.exitCode = 2;
+  } else {
+    throw error;
+  }
 }

@@ -40,6 +40,15 @@ Where the rulebook can be read in more than one way, the literal reading is the 
 - `assertInvariants(state)` checks that components are conserved (Assistants, materials, works, cards), that the needles differ, and that the board matches the players' counts. The tests run it after every move.
 - `visibleState(state, player)` is what a bot is allowed to see.
 
+## Bots
+
+A bot implements `decide(view, player)` and returns `{ move, score, reason, alternatives }` (`ai/types.ts`). It only ever gets `visibleState(state, player)`. `playGame({ bots, oracle })` plays a whole game and is what the simulator uses.
+
+- `randomBot`: any legal move. A baseline and a fuzzer for the rules.
+- `greedyBot`: the best immediate VP + BF, looking through its own follow-up decisions (a whole Sale, a whole Construction). It stops at chance events and other players' decisions.
+
+`applyLegalMove()` is `apply()` without the legality check, for bots that look ahead with moves taken straight from `legalMoves()`.
+
 ## Where the rules live
 
 | File                      | Rulebook                                                    |

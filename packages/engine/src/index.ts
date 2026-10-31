@@ -5,3 +5,4 @@ export * from './state/coords';
 export * from './state/types';
 export * from './rules';
 export * from './chance';
+export * from './ai';

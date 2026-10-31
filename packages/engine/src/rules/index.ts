@@ -1,4 +1,4 @@
-export { apply, IllegalMoveError } from './apply';
+export { apply, applyLegalMove, IllegalMoveError } from './apply';
 export { legalMoves, cursorPositions } from './legal-moves';
 export { newGame, type NewGameOptions } from './setup';
 export { DEFAULT_RULES, type RuleOptions } from './options';

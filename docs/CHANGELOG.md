@@ -34,3 +34,11 @@
 - Seeded random games for 2–5 players run to the end with no broken invariants (200 random games take about 4 seconds).
 - New literal readings behind rule options: Q14–Q19 in `docs/rules-questions.md`, waiting for Hans.
 - Hans confirmed Q14–Q17 as implemented and decided Q19: paying for Public Figures is optional (`mustPayPublicFiguresWhenAble` now defaults to `false`). Q18: a disc never moves past the last space of a track. All rules questions are closed again.
+
+## Phase 3: Simulator and baseline bots (2026-10-31)
+
+- Bots in `engine/src/ai`: `randomBot` and `greedyBot` (best immediate VP + BF, looking through its own follow-up decisions). Bots return `{ move, score, reason, alternatives }` with a short English reason, and only see `visibleState()`.
+- `playGame({ bots, oracle })` plays a whole game. `applyLegalMove()` lets bots look ahead without the legality check.
+- `pnpm sim -- --games 1000 --players 3 --bots greedy,random,random --seed 42`: win rates, average scores with a breakdown by scoring category, and how often each decision is chosen. Seats rotate every game. `--players 2,3,4,5` cycles player counts. Invariants are checked after every move unless `--no-invariants` is given.
+- 10,000 random games (2–5 players, seed 1) ran without errors and with invariants checked after every move, in 3 minutes.
+- Greedy vs. two random bots, 3 players, 1,000 games, seed 42: greedy wins 79.0% (average 27.2 VP). As expected from a greedy bot, it lives off the Stock Exchange, Grand Plaza (Brugmann's 5 BF) and Park Sales, and never builds.
