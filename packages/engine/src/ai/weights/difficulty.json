@@ -1,0 +1,6 @@
+{
+  "easy": { "temperature": 3, "topK": 5 },
+  "normal": { "temperature": 1, "topK": 3 },
+  "hard": { "temperature": 0.5, "topK": 2 },
+  "brutal": { "temperature": 0, "topK": 1 }
+}

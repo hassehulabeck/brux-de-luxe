@@ -11,6 +11,8 @@ export interface ScoredMove {
 export interface BotDecision extends ScoredMove {
   /** The best other moves, best first. */
   alternatives: ScoredMove[];
+  /** The bot's leading plan, for bots that have plans ("Builder"). The table app shows it. */
+  plan?: string;
 }
 
 /**
