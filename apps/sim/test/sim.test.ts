@@ -27,6 +27,10 @@ describe('parseSimArgs', () => {
       checkInvariants: true,
       log: null,
       tournament: false,
+      tune: false,
+      iterations: 30,
+      from: 'default',
+      out: expect.stringMatching(/packages\/engine\/src\/ai\/weights\/tuned\.json$/),
     });
   });
 
@@ -39,6 +43,7 @@ describe('parseSimArgs', () => {
 
   it('rejects unknown bots and a bot list that does not fit the player count', () => {
     expect(() => parseSimArgs(['--bots', 'clever'])).toThrow(UsageError);
+    expect(() => parseSimArgs(['--bots', 'utility:nope'])).toThrow(UsageError);
     expect(() => parseSimArgs(['--players', '4', '--bots', 'greedy,random'])).toThrow(UsageError);
     expect(() => parseSimArgs(['--players', '6'])).toThrow(UsageError);
   });

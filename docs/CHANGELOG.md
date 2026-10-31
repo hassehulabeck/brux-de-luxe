@@ -54,3 +54,13 @@
 - Simulator: `--log <file>` writes every bot decision with its reason and top 3 alternatives as JSON lines; `--tournament` plays fixed matchups.
 - **Result:** utility (Normal) vs. two greedy bots, 3 players, 1,000 games, seed 42, invariants checked: utility wins **100%** (average 154.0 VP against 23.1 and 21.0). Tournament (seed 42, 100 games each): utility wins 100% in every matchup (3p vs greedy, 3p vs random, 2p vs greedy, 4p vs greedy). Greedy vs. two random: 68.0%.
 - For Phase 5 to look at: the bot scores a lot from tuck row 4 (Assistants beyond the second, 34.5 VP per game, 8.5 tucks against 5.2 uses), and hardly uses the Stock Exchange or Grand Plaza. Tempo/scarcity and opponent modelling are not built yet.
+
+## Phase 5: Tuning (2026-10-31)
+
+- Weight sets by name: `WEIGHT_SETS` in `engine/src/ai/weights/index.ts` (`default`, `tuned`). The simulator takes `--bots utility:<set>`; plain `utility` is `default`.
+- `pnpm sim -- --tune`: hill-climbing over a weight set (`apps/sim/src/tune.ts`). Each step changes 3 weights by a random factor and plays the candidate against the champion (with a greedy bot as third seat). A candidate must outscore the champion in more than 55% of the games, then in more than 50% of fresh games. How it works: `docs/ai.md`.
+- Degeneracy checks in every report: never uses the Brussels board, always tucks, never builds, hoards money (`apps/sim/src/degeneracy.ts`).
+- The tournament now also plays the tuned set against the hand-made one.
+- `ai/weights/tuned.json`: two tuning runs from `default` (seeds 42 and 43, 80 games per evaluation), 13 accepted steps in all. By mistake, both runs wrote to the same file at the same time. The file holds the second run's champion, which started from the first run's first 4 steps. Every check below was made on this file.
+- **Result:** tournament, seed 42, 100 games per matchup, invariants checked: `utility:tuned` wins 70% against two `utility` (default) bots in 3-player games, 85% head to head in 2-player games, and 100% against two greedy bots (186.4 VP on average). On a fresh seed (7), 300 games of tuned vs default vs greedy: tuned wins 96.7% (156.7 VP against 100.8). No degenerate strategies are flagged. The Phase 4 matchups give exactly the same results as before.
+- The tuned set plays a different game: mostly an Art Dealer. Per game it takes 9.3 Workshop actions (default: 1.3), scores 53 VP from works on tuck row 2 (default: 2), and builds 2.4 Buildings (default: 4.9).

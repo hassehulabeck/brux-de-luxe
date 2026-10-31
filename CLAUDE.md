@@ -21,6 +21,7 @@ pnpm --filter engine test
 pnpm sim -- --games 1000 --players 3 --bots utility,greedy,random --seed 42
 pnpm sim -- --tournament --seed 42   # fixed matchups, --games games each (default 100)
 pnpm sim -- --games 1 --bots utility,greedy,greedy --log decisions.jsonl   # decision log
+pnpm sim -- --tune --iterations 40 --games 80 --seed 42 --no-invariants   # tune weights -> weights/tuned.json
 pnpm --filter web dev
 pnpm --filter web build
 ```

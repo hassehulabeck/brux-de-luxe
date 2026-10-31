@@ -9,8 +9,9 @@
 | 2. Rules engine              | Done        | #4                                                                                 |
 | 3. Simulator + baseline bots | Done        | #5                                                                                 |
 | 4. Utility bot v1            | Done        | #7                                                                                 |
-| **5. Tuning**                | **Next**    |                                                                                    |
-| 6–8                          | Not started |                                                                                    |
+| 5. Tuning                    | Done        | #8                                                                                 |
+| **6. Table app (MVP)**       | **Next**    |                                                                                    |
+| 7–8                          | Not started |                                                                                    |
 
 Repository: https://github.com/hassehulabeck/brux-de-luxe (public). Work on a branch per phase off `main` and open a PR to `main` (no stacked PRs). CI runs `pnpm check`, `pnpm test` and the web build.
 
@@ -33,7 +34,9 @@ Decisions taken along the way that differ from or add to the plan below:
 
 - **Utility bot:** in 3-player games (1,000 games, seed 42), `utility` beats two `greedy` bots 100% of the time with an average of 154.0 VP. How it thinks: `docs/ai.md`. It leans hard on tuck row 4 and rarely uses the Stock Exchange or Grand Plaza: a first thing to check in Phase 5.
 
-Next steps for Phase 5 (see Phase 5 below): weight search in `apps/sim`, tournaments between weight sets, and checks for degenerate strategies.
+- **Tuning:** `utility:tuned` (`ai/weights/tuned.json`) beats the hand-made weights 70% of the time in 3-player games against two of them, and 85% head to head. It plays mostly as an Art Dealer (works and tuck row 2). The table app still has to choose between the two sets.
+
+Next steps for Phase 6 (see Phase 6 below): the Vue table app.
 
 ## 1. Goal
 
@@ -242,14 +245,14 @@ Implement in order, each with unit tests based on the rulebook examples:
 - Decision logs (`--log`) with the top-3 alternatives per decision.
 - **Done when:** Utility (Normal) beats Greedy ≥ 80% in 3-player self-play, and a sample of logged decisions reads sensibly.
 
-### Phase 5: Tuning (next)
+### Phase 5: Tuning (done)
 
 - Hill-climbing / simple evolutionary search over plan weights and consideration weights in `apps/sim`.
 - Tournament mode between weight sets; save tuned sets as JSON in `engine/src/ai/weights/`.
 - Check for degenerate behaviour (never uses Brussels, always tucks, never builds, hoards money).
 - **Done when:** tuned weights beat hand weights and there are no obvious degenerate strategies.
 
-### Phase 6: Table app (MVP)
+### Phase 6: Table app (MVP) (next)
 
 - New game wizard: players, seats, which seats are bots + difficulty/temperament, strip arrangement, compass tiles, starting Work of Art draws.
 - Main screen: compact board state, whose turn, pending decision.

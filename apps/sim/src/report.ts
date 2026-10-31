@@ -2,6 +2,7 @@
  * Formats a MatchResult as plain text tables for the terminal.
  */
 
+import { formatWarnings } from './degeneracy';
 import type { EntryStats, MatchResult } from './match';
 
 export function formatReport(result: MatchResult): string {
@@ -42,6 +43,13 @@ export function formatReport(result: MatchResult): string {
     'Decisions per game (per seat):',
     actionsTable(entries),
   ];
+
+  const warnings = formatWarnings(entries);
+  lines.push(
+    '',
+    'Degenerate strategies:',
+    ...(warnings.length ? warnings.map((w) => `  ${w}`) : ['  none']),
+  );
 
   if (result.errors.length > 0) {
     lines.push('', `${result.errors.length} game(s) failed:`);
