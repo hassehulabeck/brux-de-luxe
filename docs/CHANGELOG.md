@@ -64,3 +64,16 @@
 - `ai/weights/tuned.json`: two tuning runs from `default` (seeds 42 and 43, 80 games per evaluation), 13 accepted steps in all. By mistake, both runs wrote to the same file at the same time. The file holds the second run's champion, which started from the first run's first 4 steps. Every check below was made on this file.
 - **Result:** tournament, seed 42, 100 games per matchup, invariants checked: `utility:tuned` wins 70% against two `utility` (default) bots in 3-player games, 85% head to head in 2-player games, and 100% against two greedy bots (186.4 VP on average). On a fresh seed (7), 300 games of tuned vs default vs greedy: tuned wins 96.7% (156.7 VP against 100.8). No degenerate strategies are flagged. The Phase 4 matchups give exactly the same results as before.
 - The tuned set plays a different game: mostly an Art Dealer. Per game it takes 9.3 Workshop actions (default: 1.3), scores 53 VP from works on tuck row 2 (default: 2), and builds 2.4 Buildings (default: 4.9).
+
+## Phase 6: Table app (2026-10-31)
+
+- `apps/web`: the table app (Vue 3 + Pinia). How it works: `docs/web.md`.
+- New game wizard: 2–5 seats in turn order, human or bot, bot difficulty. Setup chance events (strips, compass tiles, Public Figures, starting works, Bonus cards, Stock Exchange card) are asked as prompts.
+- Human decisions follow `legalMoves()`: tap a board space and choose the bid, tap the Workshop cursor position, or press a button.
+- Bot turns are shown as physical instructions with the bot's reason and plan, followed by **Done**. Draws during a bot's turn are asked in between.
+- Undo (back to the last human input) and redo, autosave to `localStorage` after every move, export and import as JSON.
+- Offline after the first visit (hand-written service worker, web app manifest), tablet-first layout that also works on a phone.
+- `deploy.yml`: build and FTP upload to the web hotel on every push to `main`, once the FTP secrets are set.
+- Tests: session (undo/redo, save/load, illegal moves), wording, and a store test that plays a whole game with one human and two bots.
+- Checked in a real browser (headless Chrome): setup wizard, setup prompts, a human turn with a bid, and a bot turn with a draw in the middle. No console errors.
+- **Still to do for "done":** play a complete game at a real table with 1 human and 2 bots, without workarounds (PLAN.md Phase 6).
