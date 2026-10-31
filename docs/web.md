@@ -13,7 +13,10 @@ pnpm --filter web build   # static files in apps/web/dist
 2. **Setup**: the app asks what the table laid out: the Action strips row by row, the compass tiles space by space, the Public Figures for the Royal Theater, each player's starting Work of Art, the Bonus cards and the Stock Exchange card.
 3. **Human turns**: the panel at the top asks the question for the pending decision. Board spaces and Workshop cursor positions are tapped directly; everything else is a big button. Only legal moves are offered.
 4. **Bot turns**: the panel lists the bot's moves as instructions, with its reason and its current plan. If the bot draws something (Works of Art in the Workshop), the app asks what was drawn. A human carries the moves out on the board and taps **Done**.
-5. **Game over**: the final scores, category by category.
+5. **Also on the board**: when the engine does something on its own, the app says what to move. That covers a secondary action on someone's Building, each shield that scores (who scores how many VP), and the Brussels majority. During a bot turn these are part of its list; after a human move they show in a box at the top, closed with **Done**.
+6. **Can't carry out an action?** If only **Skip** is offered, the app says why (for a Construction: the needle tiles, what the next Building costs, and what you have).
+7. **Bonus cards**: each won card is shown with its column, so a player with two cards knows which one is which.
+8. **Game over**: the final scores, category by category.
 
 **Undo** goes back to before the last thing a human entered (a decision or a draw), bot moves included. **Redo** plays it again. **Export** downloads the game as JSON; **Import** on the start screen loads one.
 
