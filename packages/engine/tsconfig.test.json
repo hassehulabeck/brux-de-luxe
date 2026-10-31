@@ -1,0 +1,8 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Tests may use Node APIs (e.g. process.env flags); src/ may not.
+    "types": ["node"]
+  },
+  "include": ["src", "test"]
+}
