@@ -76,6 +76,7 @@ export function newGame(options: NewGameOptions): GameState {
     steps: [],
     pending: null,
     final: null,
+    events: [],
   };
 
   pushSteps(state, [

@@ -182,20 +182,29 @@ describe('secondary actions (Appendix 2, p. 11)', () => {
     const { start, space } = useOpponentsBuilding('workshop');
     const after = play(start, { kind: 'placeAssistant', space, bid: 1 }, { kind: 'skipAction' });
     expect(after.players[1]!.works.black).toBe(1);
+    expect(after.events).toEqual([
+      { kind: 'secondaryAction', owner: 1, action: 'workshop', vp: 0, blackWork: true },
+    ]);
   });
 
   it('Sale: the owner gains 1 VP per work', () => {
     const { start, space } = useOpponentsBuilding('sale');
     const after = play(start, { kind: 'placeAssistant', space, bid: 1 }, { kind: 'skipAction' });
     expect(after.players[1]!.vp).toBe(1);
+    // The owner may not be at the board: the table is told to move the VP marker.
+    expect(after.events).toEqual([
+      { kind: 'secondaryAction', owner: 1, action: 'sale', vp: 1, blackWork: false },
+    ]);
   });
 
   it('Materials: the owner takes 1 Noble Material, after the main action', () => {
     const { start, space } = useOpponentsBuilding('materials');
     const main = play(start, { kind: 'placeAssistant', space, bid: 1 }, { kind: 'performAction' });
     expect(main.pending).toEqual({ kind: 'takeMaterials', player: 0, count: 2 });
+    expect(main.events).toEqual([]);
     const secondary = play(main, { kind: 'takeMaterials', materials: ['wood', 'wood'] });
     expect(secondary.pending).toEqual({ kind: 'takeMaterials', player: 1, count: 1 });
+    expect(secondary.events).toMatchObject([{ kind: 'secondaryAction', owner: 1 }]);
   });
 
   it('Royal Theater: the owner may activate one upright Public Figure', () => {
@@ -220,6 +229,7 @@ describe('secondary actions (Appendix 2, p. 11)', () => {
     });
     const after = play(strict, { kind: 'placeAssistant', space, bid: 1 }, { kind: 'skipAction' });
     expect(after.players[1]!.vp).toBe(0);
+    expect(after.events).toEqual([]);
   });
 
   it('does not trigger on your own Building', () => {

@@ -55,6 +55,7 @@ export function applyLegalMove(state: GameState, move: Move): GameState {
   const draft = cloneState(state);
   const pending = draft.pending!;
   draft.pending = null;
+  draft.events = [];
   handleMove(draft, pending, move);
   advance(draft);
   return draft;

@@ -92,9 +92,15 @@ export function startAction(draft: GameState, owner: PlayerIndex, action: ArtNou
   }
 }
 
-/** The building owner's secondary action (Appendix 2). Works on a draft. */
+/**
+ * The building owner's secondary action (Appendix 2). Works on a draft.
+ * It is announced as a table event, because the owner may not be the
+ * player at the board and nobody has to decide anything for most of them.
+ */
 export function secondaryAction(draft: GameState, owner: PlayerIndex, action: ArtNouveauAction) {
   const p = player(draft, owner);
+  const vpBefore = p.vp;
+  const blackBefore = p.works.black;
   switch (action) {
     case 'workshop':
       // Take a black Work of Art.
@@ -103,25 +109,32 @@ export function secondaryAction(draft: GameState, owner: PlayerIndex, action: Ar
         draft.workStacks.black--;
         p.works.black++;
       }
-      return;
+      break;
     case 'sale':
       // 1 VP per work you have, black included.
       p.vp += workCount(p);
-      return;
+      break;
     case 'royalTheater':
       // Activate one upright Public Figure.
       draft.steps.push({ kind: 'activatePublicFigures', player: owner, remaining: 1 });
-      return;
+      break;
     case 'materials':
       takeMaterialsDecision(draft, owner, MATERIALS_SECONDARY_CUBES);
-      return;
+      break;
     case 'construction':
       // 1 VP per building you already have on the Art Nouveau board.
       p.vp += buildingsOnBoard(draft, owner);
-      return;
+      break;
     default:
       assertNever(action);
   }
+  draft.events.push({
+    kind: 'secondaryAction',
+    owner,
+    action,
+    vp: p.vp - vpBefore,
+    blackWork: p.works.black > blackBefore,
+  });
 }
 
 // --- Sale ----------------------------------------------------------------------

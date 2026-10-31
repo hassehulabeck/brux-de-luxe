@@ -31,7 +31,9 @@ export function resolveBids(draft: GameState): void {
     if (best === 0) return; // Nobody bid: the card stays and is discarded at End of Turn.
     const winners = totals.flatMap((total, p) => (total === best ? [p] : []));
     const tied = winners.length > 1;
-    for (const winner of winners) draft.round.bonusWon.push({ player: winner, card, tied });
+    for (const winner of winners) {
+      draft.round.bonusWon.push({ player: winner, card, column: col, tied });
+    }
     if (tied) draft.bonusDiscard[card]!++;
     draft.bonusStrip[col] = null;
   });
@@ -114,8 +116,11 @@ export function tuckBonus(draft: GameState, index: number, row: 1 | 2 | 3 | 4): 
 export function scoreShields(draft: GameState): void {
   for (let row = 1; row <= SHIELD_COUNT_PER_SIDE; row++) {
     for (let col = 1; col <= SHIELD_COUNT_PER_SIDE; col++) {
-      for (const scorer of shieldWinners(draft, { row, col })) {
-        player(draft, scorer).vp += trackValue(draft, scorer, 'cityHall');
+      const shield = { row, col };
+      for (const scorer of shieldWinners(draft, shield)) {
+        const vp = trackValue(draft, scorer, 'cityHall');
+        player(draft, scorer).vp += vp;
+        draft.events.push({ kind: 'shieldScored', shield, player: scorer, vp });
       }
     }
   }
@@ -145,12 +150,13 @@ export function brusselsMajority(draft: GameState): void {
   }
   const best = Math.max(...totals);
   if (best === 0) return; // Nobody used the Brussels board (Q11).
-  totals.forEach((total, p) => {
-    if (total !== best) return;
+  const players = totals.flatMap((total, p) => (total === best ? [p] : []));
+  for (const p of players) {
     const assistants = player(draft, p).assistants;
     assistants.brussels--;
     assistants.courthouse++;
-  });
+  }
+  draft.events.push({ kind: 'brusselsMajority', players });
 }
 
 export function applyBonusEffect(draft: GameState, owner: PlayerIndex, effect: BonusEffect) {
