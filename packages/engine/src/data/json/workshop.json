@@ -1,11 +1,11 @@
 {
-  "bfByRow": "TODO_DATA",
-  "vpByColumn": "TODO_DATA",
-  "cursorStart": "TODO_DATA",
+  "bfByRow": [6, 4, 2, 0, 2, 4, 6],
+  "vpByColumn": [6, 4, 2, 0, 2, 4, 6],
+  "cursorStart": { "row": 3, "col": 3 },
   "dots": {
-    "blue": "TODO_DATA",
-    "pink": "TODO_DATA",
-    "yellow": "TODO_DATA",
-    "green": "TODO_DATA"
+    "blue": { "row": -1, "col": -1 },
+    "pink": { "row": -1, "col": 1 },
+    "yellow": { "row": 1, "col": 1 },
+    "green": { "row": 1, "col": -1 }
   }
 }

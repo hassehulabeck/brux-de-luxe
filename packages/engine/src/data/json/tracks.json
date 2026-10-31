@@ -1,5 +1,5 @@
 {
-  "cityHall": "TODO_DATA",
-  "royalPalace": "TODO_DATA",
-  "architect": "TODO_DATA"
+  "cityHall": [1, 2, 2, 3, 3, 4],
+  "royalPalace": [1, 2, 3, 4, 5, 7],
+  "architect": [3, 4, 5, 6, 8, 10]
 }
