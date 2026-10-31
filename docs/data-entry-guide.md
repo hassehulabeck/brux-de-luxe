@@ -25,20 +25,33 @@ The examples below use **made-up values** to show the format. They are not the r
 
 ---
 
+## Already filled in from the rulebook illustrations
+
+Some values are visible in the rulebook's pictures, so they have been entered already. Please **check them against the physical components** and correct the JSON if anything differs:
+
+| File                 | Value                                                                                                                                                                             | Source                                                                                        |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `action-strips.json` | `"orientation": "row"` (each strip is a horizontal row)                                                                                                                           | Contents (p. 1) and setup (p. 3)                                                              |
+| `workshop.json`      | 7×7 grid, rows 6/4/2/0/2/4/6 BF, columns 6/4/2/0/2/4/6 VP; cursor starts in the center; blue top-left, pink top-right, green bottom-left, yellow bottom-right of the black center | Setup (p. 2), checked against the Sale examples on p. 5 (2 BF + 6 VP) and p. 11 (2 BF + 4 VP) |
+| `tracks.json`        | City Hall 1, 2, 2, 3, 3, 4; Royal Palace 1, 2, 3, 4, 5, 7; Architect 3, 4, 5, 6, 8, 10                                                                                            | Setup (p. 2 and p. 3)                                                                         |
+| `compass.json`       | needles start on the two top spaces: `[0, 5]`                                                                                                                                     | Setup step 11 (p. 2)                                                                          |
+
+The Workshop column labels are the blurriest of these, so they are the most important to check.
+
 ## 1. Action strips: `action-strips.json`
 
-There are 5 Action strips. Only the **basic side** (without the special symbol) is needed.
+There are 5 Action strips. Each strip is one **row** of the Art Nouveau board. Only the **basic side** (without the special symbol) is needed.
 
-1. Check how the strips sit on the board. Set `"orientation"` to `"row"` if each strip is a horizontal row of the 5×5 board, or `"column"` if each strip is a vertical column. (This is open question Q1 in `rules-questions.md`.)
-2. For each strip, enter:
-   - `"id"`: whatever identifies the strip (a printed letter or number). If nothing is printed, label the strips yourself, e.g. with a small sticker `"1"` to `"5"`, so the app can ask "which strip is in column 3?" at setup.
-   - `"basicSide"`: the 5 actions in order, **left to right** for row strips, **top to bottom** for column strips. Use these names: `"workshop"`, `"sale"`, `"royalTheater"`, `"materials"`, `"construction"`.
+For each strip, enter:
+
+- `"id"`: whatever identifies the strip (a printed letter or number). If nothing is printed, label the strips yourself, e.g. with a small sticker `"1"` to `"5"`, so the app can ask "which strip is in row 3?" at setup.
+- `"basicSide"`: the 5 actions **left to right**, holding the strip the way it lies on the board. Use these names: `"workshop"`, `"sale"`, `"royalTheater"`, `"materials"`, `"construction"`.
 
 ```json
 { "id": "1", "basicSide": ["sale", "workshop", "construction", "materials", "royalTheater"] }
 ```
 
-## 2. Workshop: `workshop.json`
+## 2. Workshop: `workshop.json` (pre-filled, please check)
 
 The Workshop is the grid on the Brussels board that the Workshop cursor moves over. A dot's **row** gives BF and its **column** gives VP (rulebook p. 5).
 
@@ -47,23 +60,9 @@ The Workshop is the grid on the Brussels board that the Workshop cursor moves ov
 - `"cursorStart"`: the grid cell under the cursor's **center** at setup ("center of the workshop"), as `{ "row": r, "col": c }` counted from the top-left cell = `{ "row": 0, "col": 0 }`.
 - `"dots"`: where each colored dot of the cursor sits **relative to its center**, in grid cells. Up and left are negative, down and right are positive. The black dot is the center itself, so it isn't entered.
 
-```json
-{
-  "bfByRow": [5, 4, 3, 2, 1],
-  "vpByColumn": [1, 2, 3, 4, 5],
-  "cursorStart": { "row": 2, "col": 2 },
-  "dots": {
-    "blue": { "row": -1, "col": 0 },
-    "pink": { "row": 0, "col": 1 },
-    "yellow": { "row": 1, "col": 0 },
-    "green": { "row": 0, "col": -1 }
-  }
-}
-```
-
 Please also answer open question **Q2**: can the cursor move so that a colored dot leaves the grid?
 
-## 3. Tracks: `tracks.json`
+## 3. Tracks: `tracks.json` (pre-filled, please check)
 
 Three lists, each starting with the space where the disc **starts** (setup step 4) and continuing to the last space.
 
@@ -71,21 +70,13 @@ Three lists, each starting with the space where the disc **starts** (setup step 
 - `"royalPalace"`: for each Royal Palace Coat of Arms space, the number of Public Figures a player can activate with one Grand Plaza action (rulebook p. 7).
 - `"architect"`: for each Architect track space on the personal board, the end-game VP per building (rulebook p. 10). Check that all 5 personal boards show the same track.
 
-```json
-{ "cityHall": [1, 2, 3, 4], "royalPalace": [1, 2, 3], "architect": [1, 2, 3, 4, 5] }
-```
-
 If a track space shows anything besides its value, tell Claude.
 
-## 4. Compass: `compass.json`
+## 4. Compass: `compass.json` (pre-filled, please check)
 
-The 6 compass tiles are placed randomly each game, so only the needles' **starting position** (setup step 11, as illustrated in the rulebook) is entered here.
+The 6 compass tiles are placed randomly each game, so only the needles' **starting position** (setup step 11) is entered here.
 
-Number the 6 compass spaces **0 to 5 clockwise, starting with the topmost space** (the one at or just clockwise of 12 o'clock). Enter the two spaces the needles start on:
-
-```json
-{ "needleStart": [0, 3] }
-```
+The compass ring is divided at 12, 2, 4, 6, 8 and 10 o'clock. Number the 6 spaces **0 to 5 clockwise, starting with the space just clockwise of 12 o'clock** (centered on 1 o'clock). The rulebook shows the needles starting on the two top spaces, 0 (1 o'clock) and 5 (11 o'clock).
 
 ## 5. Stock Exchange cards: `stock-exchange-cards.json`
 
@@ -157,7 +148,9 @@ If a card shows something that doesn't fit these shapes, tell Claude.
 26 cards in total, including the **5 starting Georges Brugmann cards** (setup step 5).
 
 - `"startingBrugmannCost"`: the end-game cost printed on a starting Brugmann card. If the 5 starting cards differ, tell Claude.
-- `"deck"`: for each of the 8 figures, the cost of **every copy** in the shuffled deck, e.g. `"costs": [2, 3, 3]` means three cards of that figure, one costing 2 BF and two costing 3 BF. Use `[]` for a figure with no cards in the deck (e.g. if Brugmann only exists as starting cards).
+- `"deck"`: for each of the 8 figures, the cost of **every copy** in the shuffled deck, e.g. `"costs": [2, 2, 2]` means three cards of that figure, each costing 2 BF. Use `[]` for a figure with no cards in the deck (e.g. if Brugmann only exists as starting cards).
+
+The cards in Appendix 1 (p. 11) each show a number in a circle on the left edge. It is most likely the end-game cost: Brugmann 1, Solvay 2, Empain 2, Buls 3, Prince Albert 3, Vandervelde 4, Van De Velde 4, Maeterlinck 5. The rulebook doesn't say what the circle means or how many copies there are, so this file is still `TODO_DATA`. Please confirm the meaning, check that all copies of a figure show the same number, and count the copies.
 
 The total (all deck cards + 5) must be 26. Please also answer open question **Q12**: are there Brugmann cards in the deck besides the 5 starting cards, and do the starting cards look different?
 

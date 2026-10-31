@@ -6,15 +6,18 @@ Status: **open** (waiting for Hans), **decided** (answer recorded), **literal** 
 
 ## Component and board geometry
 
-### Q1. Are the Action strips rows or columns of the Art Nouveau board? (open)
+### Q1. Are the Action strips rows or columns of the Art Nouveau board? (decided by the rulebook)
 
-The rulebook says "assemble the 5 Action strips and place them above the Bonus strip" (p. 2). That fits both 5 horizontal strips stacked on top of each other and 5 vertical strips side by side. PLAN.md says "which strip in which column", but that needs checking against the physical game. It decides how a strip's data maps onto the 5×5 board.
+**Rows.** The contents (p. 1) and the setup illustration (p. 3) show 5 horizontal strips stacked above the Bonus strip, each holding one row of 5 action spaces. `action-strips.json` has `"orientation": "row"`.
 
-Related: is shield row 1 the **top** row and shield column 1 the **left** column? `state/coords.ts` assumes so. The Stock Exchange card data depends on it.
+Shield numbering is also shown on p. 3: the row labels **4, 3, 2, 1 run from top to bottom**, so shield row 1 is the bottom row next to the Bonus strip. The column labels 1–4 run left to right. `state/coords.ts` follows this.
 
 ### Q2. Workshop cursor bounds (open)
 
-Can the Workshop cursor be moved so that one of its colored dots lies outside the printed grid? If not, which cursor center positions are legal? This is needed together with the Workshop data (see `data-entry-guide.md`).
+Can the Workshop cursor be moved so that one of its colored dots lies outside the printed grid? If not, which cursor center positions are legal?
+
+The rulebook illustrations don't settle it. In both Sale examples (p. 5 and p. 11) the cursor ends with its dots on the left edge of the grid, but never beyond it. If dots may not leave the 7×7 grid, the cursor center can only be on the inner 5×5 cells.
+**Literal reading (proposed):** the whole cursor stays on the grid. Option: `rules.workshopCursorMayOverhang = false`.
 
 ## Phase B: actions
 
