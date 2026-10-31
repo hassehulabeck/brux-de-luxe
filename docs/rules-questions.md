@@ -21,10 +21,10 @@ The rulebook illustrations don't settle it. In both Sale examples (p. 5 and p. 1
 
 ## Phase B: actions
 
-### Q3. Does the Fiftieth Anniversary Park action trigger secondary actions for a building owner? (literal)
+### Q3. Does the Fiftieth Anniversary Park action trigger secondary actions for a building owner? (decided by Hans)
 
 The secondary action triggers "when a player chooses an action on the Art Nouveau board, on which an opponent has built a Building tile" (p. 11). The Park action does not place anything on the Art Nouveau board (p. 7), so it is not tied to any space or building.
-**Literal reading:** no secondary action. Option: `rules.parkTriggersSecondary = false`.
+**Decided (Hans):** no secondary action.
 
 ### Q4. Sale: must the cursor move exactly N spaces, or up to N? (decided by Hans)
 
@@ -36,20 +36,20 @@ The secondary action triggers "when a player chooses an action on the Art Nouvea
 "Turn one of the two compass needles one space clockwise. The needles are never allowed to point at the same box" (p. 6). Is that needle simply not allowed to turn (so you must turn the other one), or does it skip over the other needle?
 **Decided (Hans):** that needle can't be turned, so you turn the other needle. With 6 spaces at most one of the two needles is ever blocked, so there is always a legal turn.
 
-### Q6. Construction: does a Joker-only payment still have to "use both compass types"? (literal)
+### Q6. Construction: does a Joker-only payment still have to "use both compass types"? (decided by Hans)
 
 Each construction unit may be replaced by a Joker (p. 6), and you must pay with both unit types shown by the needles.
-**Literal reading:** a Joker replaces one unit of whichever type it stands in for, so any number of the units, including all of them, may be Jokers. The 5 VP bonus is lost as soon as one Joker is used.
+**Decided (Hans):** a Joker replaces one unit of whichever type it stands in for, so any number of the units, including all of them, may be Jokers. The 5 VP bonus is lost as soon as one Joker is used.
 
-### Q7. Is money in the supply limited? (literal)
+### Q7. Is money in the supply limited? (decided by Hans)
 
 The game has 76 × 1 BF and 12 × 5 BF coins (136 BF). The rulebook only says Noble Materials can run out (p. 6).
-**Literal reading:** money is unlimited, Noble Materials (10 of each) and Jokers (15) are limited. The engine still tracks money so the totals can be checked.
+**Decided (Hans):** money is unlimited. Noble Materials (10 of each) and Jokers (15) are limited. The engine tracks each player's BF but not a money supply, so money is left out of the component-conservation invariant.
 
-### Q8. Rebuilding the Work of Art stacks from the shop (literal)
+### Q8. Rebuilding the Work of Art stacks from the shop (decided by Hans)
 
 "Make two new stacks from the face-up tiles in the shop, making sure to leave the top 2 tiles in place" (p. 5). The shop slots are stacks, so the covered tiles go back: color tiles to the color stack and black tiles to the black stack, shuffled.
-**Literal reading:** both top tiles stay on their slots; all covered tiles are shuffled back into their stacks.
+**Decided (Hans):** both top tiles stay on their slots; all covered tiles are shuffled back into their stacks.
 
 ## Phase C: resolution
 
@@ -62,10 +62,10 @@ Appendix 3 (p. 12) answers most of this. Neutral Assistants have no bid, so they
 
 "In case of a tie, each player involved in the tie benefits from the central power, but the card is discarded" (p. 8). So it cannot be tucked. For a choice card, each tied player chooses their own power.
 
-### Q11. Brussels majority when nobody used the Brussels board (literal)
+### Q11. Brussels majority when nobody used the Brussels board (decided by Hans)
 
 "The player who placed the most total Assistant pawns ... must move one of those Assistant pawns onto the Courthouse" (p. 9). If nobody placed any, there are no pawns to move.
-**Literal reading:** nobody goes to the Courthouse.
+**Decided (Hans):** nobody goes to the Courthouse.
 
 ### Q12. Starting Brugmann cards and the 26 Public Figure cards (decided by Hans)
 

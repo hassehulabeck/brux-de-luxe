@@ -24,7 +24,7 @@ export const ACTION_STRIP_COUNT = 5;
 export const ACTION_SPACES_PER_STRIP = 5;
 export const COMPASS_SPACE_COUNT = 6;
 
-// General supply (p. 1). Whether money is limited: docs/rules-questions.md Q7.
+// General supply (p. 1). Materials are limited; money is unlimited (docs/rules-questions.md Q7).
 export const NOBLE_MATERIAL_SUPPLY: Record<NobleMaterial, number> = {
   wood: 10,
   stone: 10,
