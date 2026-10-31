@@ -386,6 +386,12 @@ function readPublicFigures(report: DataReport, path: string, value: unknown) {
   })(report, path, value);
   if (!data) return undefined;
 
+  // Brugmann cards are only dealt at setup and are never in the deck (rules-questions.md Q12).
+  const brugmannInDeck = data.deck.find((entry) => entry.figure === 'georgesBrugmann');
+  if (brugmannInDeck && brugmannInDeck.costs.length > 0) {
+    fail(report, `${path}.deck`, 'Georges Brugmann cards are never in the deck, use "costs": []');
+  }
+
   const figures = data.deck.map((entry) => entry.figure);
   if (new Set(figures).size !== figures.length) {
     fail(

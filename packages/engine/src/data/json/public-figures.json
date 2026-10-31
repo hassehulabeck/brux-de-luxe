@@ -1,7 +1,7 @@
 {
   "startingBrugmannCost": "TODO_DATA",
   "deck": [
-    { "figure": "georgesBrugmann", "costs": "TODO_DATA" },
+    { "figure": "georgesBrugmann", "costs": [] },
     { "figure": "ernestSolvay", "costs": "TODO_DATA" },
     { "figure": "charlesBuls", "costs": "TODO_DATA" },
     { "figure": "henryVanDeVelde", "costs": "TODO_DATA" },

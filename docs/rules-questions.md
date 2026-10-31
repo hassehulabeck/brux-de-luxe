@@ -12,12 +12,12 @@ Status: **open** (waiting for Hans), **decided** (answer recorded), **literal** 
 
 Shield numbering is also shown on p. 3: the row labels **4, 3, 2, 1 run from top to bottom**, so shield row 1 is the bottom row next to the Bonus strip. The column labels 1–4 run left to right. `state/coords.ts` follows this.
 
-### Q2. Workshop cursor bounds (open)
+### Q2. Workshop cursor bounds (decided by Hans)
 
 Can the Workshop cursor be moved so that one of its colored dots lies outside the printed grid? If not, which cursor center positions are legal?
 
 The rulebook illustrations don't settle it. In both Sale examples (p. 5 and p. 11) the cursor ends with its dots on the left edge of the grid, but never beyond it. If dots may not leave the 7×7 grid, the cursor center can only be on the inner 5×5 cells.
-**Literal reading (proposed):** the whole cursor stays on the grid. Option: `rules.workshopCursorMayOverhang = false`.
+**Decided (Hans):** the entire Workshop cursor must stay inside the grid. With the dots on the diagonals, the cursor center can only be on the inner 5×5 cells of the 7×7 grid.
 
 ## Phase B: actions
 
@@ -26,15 +26,15 @@ The rulebook illustrations don't settle it. In both Sale examples (p. 5 and p. 1
 The secondary action triggers "when a player chooses an action on the Art Nouveau board, on which an opponent has built a Building tile" (p. 11). The Park action does not place anything on the Art Nouveau board (p. 7), so it is not tied to any space or building.
 **Literal reading:** no secondary action. Option: `rules.parkTriggersSecondary = false`.
 
-### Q4. Sale: must the cursor move exactly N spaces, or up to N? (literal)
+### Q4. Sale: must the cursor move exactly N spaces, or up to N? (decided by Hans)
 
 "The player can move the Workshop cursor ... a number of spaces equal to the total number of works he has" (p. 5). "Can" suggests the move is optional, but the rulebook does not say whether a shorter move is allowed.
-**Literal reading:** move 0 to N spaces in total, in any mix of horizontal and vertical steps. Option: `rules.saleCursorExactDistance = false`.
+**Decided (Hans):** up to N spaces, so 0 to N steps in total, in any mix of horizontal and vertical steps.
 
-### Q5. Compass: what if turning a needle would make it point at the other needle's space? (open)
+### Q5. Compass: what if turning a needle would make it point at the other needle's space? (decided by Hans)
 
 "Turn one of the two compass needles one space clockwise. The needles are never allowed to point at the same box" (p. 6). Is that needle simply not allowed to turn (so you must turn the other one), or does it skip over the other needle?
-**Literal reading (proposed):** that needle cannot be turned, so you turn the other needle. Option: `rules.needleSkipsOccupied = false`.
+**Decided (Hans):** that needle can't be turned, so you turn the other needle. With 6 spaces at most one of the two needles is ever blocked, so there is always a legal turn.
 
 ### Q6. Construction: does a Joker-only payment still have to "use both compass types"? (literal)
 
@@ -67,9 +67,10 @@ Appendix 3 (p. 12) answers most of this. Neutral Assistants have no bid, so they
 "The player who placed the most total Assistant pawns ... must move one of those Assistant pawns onto the Courthouse" (p. 9). If nobody placed any, there are no pawns to move.
 **Literal reading:** nobody goes to the Courthouse.
 
-### Q12. Starting Brugmann cards and the 26 Public Figure cards (open)
+### Q12. Starting Brugmann cards and the 26 Public Figure cards (decided by Hans)
 
 Are the 5 starting Georges Brugmann cards part of the 26 Public Figure cards, and are there more Brugmann cards in the shuffled deck? This affects the deck composition (see the data entry guide).
+**Decided (Hans):** the Brugmann cards are only dealt at the start of the game, one to each player. Unused ones go back to the box and are never in the deck. So the deck has 26 − 5 = 21 cards and no Brugmann.
 
 ## House rules
 

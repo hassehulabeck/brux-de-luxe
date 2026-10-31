@@ -81,6 +81,22 @@ describe('validateComponents', () => {
     ]);
   });
 
+  it('rejects Georges Brugmann cards in the deck (they are only dealt at setup)', () => {
+    const raw = fakeRawComponents();
+    raw.publicFigures = {
+      startingBrugmannCost: 1,
+      deck: [
+        { figure: 'georgesBrugmann', costs: [1] },
+        { figure: 'charlesBuls', costs: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
+        { figure: 'princeAlbert', costs: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1] },
+      ],
+    };
+
+    expect(validateComponents(raw).report.errors).toEqual([
+      'publicFigures.deck: Georges Brugmann cards are never in the deck, use "costs": []',
+    ]);
+  });
+
   it('rejects needles pointing at the same compass space', () => {
     const raw = fakeRawComponents();
     raw.compass = { needleStart: [2, 2] };

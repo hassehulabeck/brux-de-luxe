@@ -60,8 +60,6 @@ The Workshop is the grid on the Brussels board that the Workshop cursor moves ov
 - `"cursorStart"`: the grid cell under the cursor's **center** at setup ("center of the workshop"), as `{ "row": r, "col": c }` counted from the top-left cell = `{ "row": 0, "col": 0 }`.
 - `"dots"`: where each colored dot of the cursor sits **relative to its center**, in grid cells. Up and left are negative, down and right are positive. The black dot is the center itself, so it isn't entered.
 
-Please also answer open question **Q2**: can the cursor move so that a colored dot leaves the grid?
-
 ## 3. Tracks: `tracks.json` (pre-filled, please check)
 
 Three lists, each starting with the space where the disc **starts** (setup step 4) and continuing to the last space.
@@ -148,11 +146,11 @@ If a card shows something that doesn't fit these shapes, tell Claude.
 26 cards in total, including the **5 starting Georges Brugmann cards** (setup step 5).
 
 - `"startingBrugmannCost"`: the end-game cost printed on a starting Brugmann card. If the 5 starting cards differ, tell Claude.
-- `"deck"`: for each of the 8 figures, the cost of **every copy** in the shuffled deck, e.g. `"costs": [2, 2, 2]` means three cards of that figure, each costing 2 BF. Use `[]` for a figure with no cards in the deck (e.g. if Brugmann only exists as starting cards).
+- `"deck"`: for each of the 7 other figures, the cost of **every copy** in the shuffled deck, e.g. `"costs": [2, 2, 2]` means three cards of that figure, each costing 2 BF. Georges Brugmann is already set to `[]`, because Brugmann cards are never in the deck (Q12).
 
 The cards in Appendix 1 (p. 11) each show a number in a circle on the left edge. It is most likely the end-game cost: Brugmann 1, Solvay 2, Empain 2, Buls 3, Prince Albert 3, Vandervelde 4, Van De Velde 4, Maeterlinck 5. The rulebook doesn't say what the circle means or how many copies there are, so this file is still `TODO_DATA`. Please confirm the meaning, check that all copies of a figure show the same number, and count the copies.
 
-The total (all deck cards + 5) must be 26. Please also answer open question **Q12**: are there Brugmann cards in the deck besides the 5 starting cards, and do the starting cards look different?
+The total (all deck cards + 5 starting Brugmann cards) must be 26, so the deck has 21 cards.
 
 ## 8. Works of Art: `works-of-art.json`
 
