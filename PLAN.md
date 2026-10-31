@@ -2,16 +2,16 @@
 
 ## 0. Status (updated 2026-10-31)
 
-| Phase                        | Status      | PR                                                                                 |
-| ---------------------------- | ----------- | ---------------------------------------------------------------------------------- |
-| 0. Scaffolding               | Done        | #1                                                                                 |
-| 1. Component data            | Done        | #2, #3 (#2 was merged into the Phase 0 branch by mistake; #3 brought it to `main`) |
-| 2. Rules engine              | Done        | #4                                                                                 |
-| 3. Simulator + baseline bots | Done        | #5                                                                                 |
-| 4. Utility bot v1            | Done        | #7                                                                                 |
-| 5. Tuning                    | Done        | #8                                                                                 |
-| **6. Table app (MVP)**       | **Next**    |                                                                                    |
-| 7–8                          | Not started |                                                                                    |
+| Phase                        | Status      | PR                                                                                    |
+| ---------------------------- | ----------- | ------------------------------------------------------------------------------------- |
+| 0. Scaffolding               | Done        | #1                                                                                    |
+| 1. Component data            | Done        | #2, #3 (#2 was merged into the Phase 0 branch by mistake; #3 brought it to `main`)    |
+| 2. Rules engine              | Done        | #4                                                                                    |
+| 3. Simulator + baseline bots | Done        | #5                                                                                    |
+| 4. Utility bot v1            | Done        | #7                                                                                    |
+| 5. Tuning                    | Done        | #8                                                                                    |
+| **6. Table app (MVP)**       | **Built**   | #10. Waiting for a real game at the table (1 human + 2 bots) before it counts as done |
+| 7–8                          | Not started |                                                                                       |
 
 Repository: https://github.com/hassehulabeck/brux-de-luxe (public). Work on a branch per phase off `main` and open a PR to `main` (no stacked PRs). CI runs `pnpm check`, `pnpm test` and the web build.
 
@@ -36,7 +36,9 @@ Decisions taken along the way that differ from or add to the plan below:
 
 - **Tuning:** `utility:tuned` (`ai/weights/tuned.json`) beats the hand-made weights 70% of the time in 3-player games against two of them, and 85% head to head. It plays mostly as an Art Dealer (works and tuck row 2). **Hans chose the hand-made `default` set for the table app** (it builds and varies its play more). `tuned` stays available in the simulator.
 
-Next steps for Phase 6 (see Phase 6 below): the Vue table app.
+- **Table app:** built (`apps/web`, how it works: `docs/web.md`). Phase 6 is done once Hans has played a whole game at the table with it (1 human + 2 bots) without workarounds. The FTP deploy needs the four `FTP_*` secrets in the repository.
+
+Next steps: play a game at the table and note what gets in the way; then Phase 7 (playtesting loop).
 
 ## 1. Goal
 
@@ -91,6 +93,7 @@ brux-de-luxe/
 │  ├─ data-entry-guide.md     # how to transcribe physical components
 │  ├─ engine.md               # how the rules engine works
 │  ├─ ai.md                   # how the utility bot thinks
+│  ├─ web.md                  # how the table app works
 │  └─ CHANGELOG.md            # what each phase delivered
 ├─ packages/
 │  └─ engine/

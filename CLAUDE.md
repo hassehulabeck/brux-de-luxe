@@ -33,7 +33,7 @@ Run `pnpm check && pnpm test` before telling Hans a task is done. If you add a s
 - `packages/engine`: pure TypeScript rules engine + AI. **No runtime dependencies, no DOM, no Node APIs.**
 - `apps/sim`: Node CLI for bot-vs-bot simulation and weight tuning.
 - `apps/web`: Vue 3 + Vite + Pinia table app (static build, PWA).
-- `docs/`: rules summary, open rule questions, data entry guide, engine and AI guides, changelog.
+- `docs/`: rules summary, open rule questions, data entry guide, engine, AI and table app guides, changelog.
 
 ## Hard rules
 
