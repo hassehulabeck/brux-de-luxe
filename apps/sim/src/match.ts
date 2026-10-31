@@ -12,7 +12,8 @@ import {
   type Move,
 } from '@brux/engine';
 import { createBot, type BotName } from './bots';
-import type { SimOptions } from './args';
+import type { MatchOptions } from './args';
+import { logEntry, type DecisionLogEntry } from './log';
 
 export interface EntryStats {
   label: string;
@@ -33,7 +34,7 @@ export interface GameError {
 }
 
 export interface MatchResult {
-  options: SimOptions;
+  options: MatchOptions;
   games: number;
   totalMoves: number;
   milliseconds: number;
@@ -41,7 +42,13 @@ export interface MatchResult {
   errors: GameError[];
 }
 
-export function runMatch(options: SimOptions, onGameDone?: (game: number) => void): MatchResult {
+export interface MatchHooks {
+  onGameDone?: (game: number) => void;
+  /** Called for every bot decision, for the decision log. */
+  onDecision?: (entry: DecisionLogEntry) => void;
+}
+
+export function runMatch(options: MatchOptions, hooks: MatchHooks = {}): MatchResult {
   const started = Date.now();
   const labels = entryLabels(options.bots);
   const entries = labels.map(newEntry);
@@ -64,8 +71,10 @@ export function runMatch(options: SimOptions, onGameDone?: (game: number) => voi
         oracle: seededOracle(seed),
         checkInvariants: options.checkInvariants,
         onDecision: (state, player, decision) => {
+          const entry = entries[entryForSeat[player]!]!;
           const label = actionLabel(state, decision.move);
-          if (label) count(entries[entryForSeat[player]!]!.actions, label);
+          if (label) count(entry.actions, label);
+          hooks.onDecision?.(logEntry({ game, seed, state, player, bot: entry.label, decision }));
         },
       });
       totalMoves += moves.length;
@@ -73,7 +82,7 @@ export function runMatch(options: SimOptions, onGameDone?: (game: number) => voi
     } catch (error) {
       errors.push({ game, seed, message: error instanceof Error ? error.message : String(error) });
     }
-    onGameDone?.(game);
+    hooks.onGameDone?.(game);
   }
 
   return {

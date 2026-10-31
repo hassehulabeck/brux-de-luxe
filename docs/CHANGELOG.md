@@ -42,3 +42,15 @@
 - `pnpm sim -- --games 1000 --players 3 --bots greedy,random,random --seed 42`: win rates, average scores with a breakdown by scoring category, and how often each decision is chosen. Seats rotate every game. `--players 2,3,4,5` cycles player counts. Invariants are checked after every move unless `--no-invariants` is given.
 - 10,000 random games (2–5 players, seed 1) ran without errors and with invariants checked after every move, in 3 minutes.
 - Greedy vs. two random bots, 3 players, 1,000 games, seed 42: greedy wins 79.0% (average 27.2 VP). As expected from a greedy bot, it lives off the Stock Exchange, Grand Plaza (Brugmann's 5 BF) and Park Sales, and never builds.
+
+## Phase 4: Utility bot v1 (2026-10-31)
+
+- `utilityBot` in `engine/src/ai`: plays with plans, an endgame score projection and considerations. How it works: `docs/ai.md`.
+- `ai/projection.ts`: the final score if the game ended now (Public Figures paid) plus what the resources are still worth in the rounds left, split into six value sources.
+- `ai/plans.ts`: Builder, Art Dealer, Politician and Opportunist. Fitness from the bot's own position, lowered when opponents are strong on the same path, softmax-blended, with inertia for last round's leading plan and an optional temperament. The leading plan is shown with every decision.
+- `ai/considerations/`: projection gain, auction, shield majority, gift, Courthouse risk, Manneken Pis, denial, building placement and area choice. Each has its own file and test.
+- `ai/search.ts`: look-ahead through the bot's own follow-up decisions, capped bids, and speed-ups (about 0.4 s per 3-player game).
+- Weights in `ai/weights/default.json`, difficulty presets (Easy/Normal/Hard/Brutal: sampling temperature and top-k) in `ai/weights/difficulty.json`.
+- Simulator: `--log <file>` writes every bot decision with its reason and top 3 alternatives as JSON lines; `--tournament` plays fixed matchups.
+- **Result:** utility (Normal) vs. two greedy bots, 3 players, 1,000 games, seed 42, invariants checked: utility wins **100%** (average 154.0 VP against 23.1 and 21.0). Tournament (seed 42, 100 games each): utility wins 100% in every matchup (3p vs greedy, 3p vs random, 2p vs greedy, 4p vs greedy). Greedy vs. two random: 68.0%.
+- For Phase 5 to look at: the bot scores a lot from tuck row 4 (Assistants beyond the second, 34.5 VP per game, 8.5 tucks against 5.2 uses), and hardly uses the Stock Exchange or Grand Plaza. Tempo/scarcity and opponent modelling are not built yet.

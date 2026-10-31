@@ -1,0 +1,160 @@
+{
+  "projection": {
+    "moneyInGame": 0.4,
+    "workInGame": 2.5,
+    "workColorPerRound": 0.4,
+    "exhibitionPerRound": 0.5,
+    "assistantPerRound": 0.6,
+    "assistantThisRound": 1.5,
+    "shieldWinsPerRound": 0.5,
+    "figureActivationsPerRound": 0.5,
+    "figureActivation": {
+      "georgesBrugmann": 3,
+      "ernestSolvay": 1.5,
+      "charlesBuls": 2,
+      "henryVanDeVelde": 2,
+      "edouardEmpain": 1.5,
+      "princeAlbert": 1,
+      "emileVandervelde": 2,
+      "mauriceMaeterlinck": 5
+    },
+    "buildsPerRound": 1.2,
+    "buildConfidence": 0.6,
+    "bfPerConstructionUnit": 6,
+    "offNeedleMaterialShare": 0.8,
+    "noJokerShare": 0.7
+  },
+  "plans": {
+    "builder": {
+      "money": 1,
+      "works": 0.7,
+      "buildings": 1.6,
+      "cityHall": 0.9,
+      "figures": 0.8,
+      "assistants": 1
+    },
+    "artDealer": {
+      "money": 1.1,
+      "works": 1.6,
+      "buildings": 0.7,
+      "cityHall": 0.9,
+      "figures": 0.8,
+      "assistants": 1
+    },
+    "politician": {
+      "money": 1,
+      "works": 0.8,
+      "buildings": 0.8,
+      "cityHall": 1.6,
+      "figures": 1.5,
+      "assistants": 1.1
+    },
+    "opportunist": {
+      "money": 1.4,
+      "works": 1,
+      "buildings": 1,
+      "cityHall": 1,
+      "figures": 1,
+      "assistants": 1.2
+    }
+  },
+  "fitness": {
+    "builder": {
+      "bias": 0.5,
+      "materials": 0.25,
+      "buildings": 0.3,
+      "architect": 0.2,
+      "works": 0,
+      "workColors": 0,
+      "exhibitions": 0,
+      "cityHall": 0,
+      "royalPalace": 0,
+      "figures": 0,
+      "money": 0
+    },
+    "artDealer": {
+      "bias": 0.3,
+      "materials": 0,
+      "buildings": 0,
+      "architect": 0,
+      "works": 0.3,
+      "workColors": 0.2,
+      "exhibitions": 0.3,
+      "cityHall": 0,
+      "royalPalace": 0,
+      "figures": 0,
+      "money": 0
+    },
+    "politician": {
+      "bias": 0.2,
+      "materials": 0,
+      "buildings": 0,
+      "architect": 0,
+      "works": 0,
+      "workColors": 0,
+      "exhibitions": 0,
+      "cityHall": 0.3,
+      "royalPalace": 0.25,
+      "figures": 0.25,
+      "money": 0
+    },
+    "opportunist": {
+      "bias": 0.4,
+      "materials": 0,
+      "buildings": 0,
+      "architect": 0,
+      "works": 0,
+      "workColors": 0,
+      "exhibitions": 0,
+      "cityHall": 0,
+      "royalPalace": 0,
+      "figures": 0,
+      "money": 0.05
+    }
+  },
+  "planning": {
+    "temperature": 0.5,
+    "inertia": 0.3,
+    "contest": 0.3
+  },
+  "considerations": {
+    "projectionGain": 1,
+    "auction": 1,
+    "shieldMajority": 1,
+    "gift": 0.6,
+    "courthouseRisk": 1,
+    "mannekenPis": 1,
+    "denial": 0.3,
+    "buildingPlacement": 1,
+    "areaChoice": 1
+  },
+  "auction": {
+    "outbidRisk": 0.25,
+    "tieHold": 0.5
+  },
+  "shields": {
+    "completion": 0.5,
+    "denial": 0.5
+  },
+  "courthouse": {
+    "leadRisk": 0.8,
+    "tieRisk": 0.6,
+    "behindRisk": 0.25
+  },
+  "mannekenPis": {
+    "firstPlayerValue": 2
+  },
+  "denial": {
+    "constructionAccess": 3
+  },
+  "buildings": {
+    "secondaryIncome": {
+      "workshop": 1.5,
+      "sale": 2,
+      "royalTheater": 1.5,
+      "materials": 1.2,
+      "construction": 1.5
+    },
+    "opponentShare": 0.5
+  }
+}

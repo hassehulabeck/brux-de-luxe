@@ -46,6 +46,7 @@ A bot implements `decide(view, player)` and returns `{ move, score, reason, alte
 
 - `randomBot`: any legal move. A baseline and a fuzzer for the rules.
 - `greedyBot`: the best immediate VP + BF, looking through its own follow-up decisions (a whole Sale, a whole Construction). It stops at chance events and other players' decisions.
+- `utilityBot`: plays with plans, an endgame score projection and a set of considerations. How it works: `docs/ai.md`.
 
 `applyLegalMove()` is `apply()` without the legality check, for bots that look ahead with moves taken straight from `legalMoves()`.
 

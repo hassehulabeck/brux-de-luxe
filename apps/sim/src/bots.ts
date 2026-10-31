@@ -1,6 +1,6 @@
-import { greedyBot, randomBot, seededRng, type Bot } from '@brux/engine';
+import { greedyBot, randomBot, seededRng, utilityBot, type Bot } from '@brux/engine';
 
-export const BOT_NAMES = ['random', 'greedy'] as const;
+export const BOT_NAMES = ['random', 'greedy', 'utility'] as const;
 export type BotName = (typeof BOT_NAMES)[number];
 
 export function createBot(name: BotName, seed: number): Bot {
@@ -10,5 +10,7 @@ export function createBot(name: BotName, seed: number): Bot {
       return randomBot(rng);
     case 'greedy':
       return greedyBot(rng);
+    case 'utility':
+      return utilityBot({ rng });
   }
 }

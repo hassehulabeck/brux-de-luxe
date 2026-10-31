@@ -7,7 +7,8 @@
 import { parseArgs } from 'node:util';
 import { BOT_NAMES, type BotName } from './bots';
 
-export interface SimOptions {
+/** What one match needs: who plays, how many games, which seed. */
+export interface MatchOptions {
   games: number;
   /** Player counts to play, cycled game by game. */
   players: number[];
@@ -15,6 +16,13 @@ export interface SimOptions {
   bots: BotName[];
   seed: number;
   checkInvariants: boolean;
+}
+
+export interface SimOptions extends MatchOptions {
+  /** Write every bot decision to this file, as JSON lines. */
+  log: string | null;
+  /** Play the fixed tournament instead of one match. */
+  tournament: boolean;
 }
 
 export const USAGE = `Usage: pnpm sim -- [options]
@@ -25,6 +33,8 @@ export const USAGE = `Usage: pnpm sim -- [options]
                        bots: ${BOT_NAMES.join(', ')}
   --seed <n>           seed for the whole run (default 1)
   --no-invariants      skip the state invariant check after every move (faster)
+  --log <file>         write every bot decision (with its top 3 alternatives) as JSON lines
+  --tournament         play the fixed tournament, --games games per matchup
   --help               show this help`;
 
 export function parseSimArgs(argv: string[]): SimOptions {
@@ -37,6 +47,8 @@ export function parseSimArgs(argv: string[]): SimOptions {
       bots: { type: 'string', default: 'random' },
       seed: { type: 'string', default: '1' },
       'no-invariants': { type: 'boolean', default: false },
+      log: { type: 'string' },
+      tournament: { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
     },
     strict: true,
@@ -60,7 +72,15 @@ export function parseSimArgs(argv: string[]): SimOptions {
     );
   }
 
-  return { games, players, bots, seed, checkInvariants: !values['no-invariants'] };
+  return {
+    games,
+    players,
+    bots,
+    seed,
+    checkInvariants: !values['no-invariants'],
+    log: values.log ?? null,
+    tournament: values.tournament,
+  };
 }
 
 export class UsageError extends Error {}

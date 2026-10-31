@@ -8,8 +8,9 @@
 | 1. Component data            | Done        | #2, #3 (#2 was merged into the Phase 0 branch by mistake; #3 brought it to `main`) |
 | 2. Rules engine              | Done        | #4                                                                                 |
 | 3. Simulator + baseline bots | Done        | #5                                                                                 |
-| **4. Utility bot v1**        | **Next**    |                                                                                    |
-| 5–8                          | Not started |                                                                                    |
+| 4. Utility bot v1            | Done        | #7                                                                                 |
+| **5. Tuning**                | **Next**    |                                                                                    |
+| 6–8                          | Not started |                                                                                    |
 
 Repository: https://github.com/hassehulabeck/brux-de-luxe (public). Work on a branch per phase off `main` and open a PR to `main` (no stacked PRs). CI runs `pnpm check`, `pnpm test` and the web build.
 
@@ -30,7 +31,9 @@ Decisions taken along the way that differ from or add to the plan below:
 - **Georges Brugmann cards are only the 5 starting cards** (cost 1). The shuffled Public Figure deck has 21 cards, 3 of each other figure.
 - **Bots:** `Bot.decide(view, player)` returns `{ move, score, reason, alternatives }`; `playGame({ bots, oracle })` runs a game; `applyLegalMove()` skips the legality check for look-ahead. The sim CLI lives in `apps/sim` (`--games`, `--players 2,3,4,5`, `--bots`, `--seed`, `--no-invariants`, `--help`).
 
-Next steps for Phase 4 (see section 5 and Phase 4 below): `ai/projection.ts`, `ai/considerations/` (one file and one test each), `ai/plans.ts`, weights in `ai/weights/*.json`, the utility bot in `ai/bots/`, and `--log` and `--tournament` in the sim.
+- **Utility bot:** in 3-player games (1,000 games, seed 42), `utility` beats two `greedy` bots 100% of the time with an average of 154.0 VP. How it thinks: `docs/ai.md`. It leans hard on tuck row 4 and rarely uses the Stock Exchange or Grand Plaza: a first thing to check in Phase 5.
+
+Next steps for Phase 5 (see Phase 5 below): weight search in `apps/sim`, tournaments between weight sets, and checks for degenerate strategies.
 
 ## 1. Goal
 
@@ -84,6 +87,7 @@ brux-de-luxe/
 │  ├─ rules-questions.md      # rule ambiguities + decisions taken (Q1–Q19, all answered)
 │  ├─ data-entry-guide.md     # how to transcribe physical components
 │  ├─ engine.md               # how the rules engine works
+│  ├─ ai.md                   # how the utility bot thinks
 │  └─ CHANGELOG.md            # what each phase delivered
 ├─ packages/
 │  └─ engine/
@@ -232,13 +236,13 @@ Implement in order, each with unit tests based on the rulebook examples:
 - Property tests: game always terminates; state invariants hold (counts of cubes, coins, assistants, tiles are conserved).
 - **Done when:** 10,000 random games run without errors.
 
-### Phase 4: Utility bot v1 (next)
+### Phase 4: Utility bot v1 (done)
 
 - Projection, considerations, plans, explanation strings.
 - Decision logs (`--log`) with the top-3 alternatives per decision.
 - **Done when:** Utility (Normal) beats Greedy ≥ 80% in 3-player self-play, and a sample of logged decisions reads sensibly.
 
-### Phase 5: Tuning
+### Phase 5: Tuning (next)
 
 - Hill-climbing / simple evolutionary search over plan weights and consideration weights in `apps/sim`.
 - Tournament mode between weight sets; save tuned sets as JSON in `engine/src/ai/weights/`.
