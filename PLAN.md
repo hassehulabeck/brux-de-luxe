@@ -1,5 +1,37 @@
 # Bruxelles 1893 Automa: Project Plan
 
+## 0. Status (updated 2026-10-31)
+
+| Phase                        | Status      | PR                                                                                 |
+| ---------------------------- | ----------- | ---------------------------------------------------------------------------------- |
+| 0. Scaffolding               | Done        | #1                                                                                 |
+| 1. Component data            | Done        | #2, #3 (#2 was merged into the Phase 0 branch by mistake; #3 brought it to `main`) |
+| 2. Rules engine              | Done        | #4                                                                                 |
+| 3. Simulator + baseline bots | Done        | #5                                                                                 |
+| **4. Utility bot v1**        | **Next**    |                                                                                    |
+| 5–8                          | Not started |                                                                                    |
+
+Repository: https://github.com/hassehulabeck/brux-de-luxe (public). Work on a branch per phase off `main` and open a PR to `main` (no stacked PRs). CI runs `pnpm check`, `pnpm test` and the web build.
+
+Where things stand:
+
+- **Component data is complete.** Hans transcribed every value; `pnpm check:data` passes. The rulebook PDF stays out of the repo (`*.pdf` is gitignored, it is copyrighted).
+- **All rules questions are answered** (Q1–Q19 in `docs/rules-questions.md`). Where Hans chose between readings, the choice is a default in `engine/src/rules/options.ts`.
+- **The engine plays full games** for 2–5 players. How it works: `docs/engine.md`. 10,000 random games ran with invariants checked after every move and no errors.
+- **Baseline:** in 3-player games (1,000 games, seed 42), `greedy` beats two `random` bots 79.0% of the time with an average of 27.2 VP. Greedy lives off the Stock Exchange, Grand Plaza (Brugmann's 5 BF) and Park Sales and never builds. Phase 4's bar is utility ≥ 80% against greedy.
+- History of each phase: `docs/CHANGELOG.md`.
+
+Decisions taken along the way that differ from or add to the plan below:
+
+- **TypeScript is pinned to `~6.0.3`**: typescript-eslint and vue-tsc don't support TypeScript 7 yet. pnpm 12 needs `allowBuilds: { esbuild: true }` in `pnpm-workspace.yaml`.
+- **Stacks and decks hold no order.** They are stored as counts/lists of contents, and each draw is decided by the `ChanceOracle` at the moment it happens. So there is no hidden deck order at all, and `visibleState()` only has to hide another player's Workshop draw.
+- **Pending decisions plus a step stack.** `state.pending` says who decides what; `state.steps` is the engine's to-do list (secondary actions, Public Figure effects, refills, resolution). `apply()` copies the state, handles the move on the copy, then runs steps until the next decision.
+- **Chance outcomes are moves** (`revealWorks`, `revealStockExchangeCard`, ...), so a game log is just the list of moves. `chanceOutcomes(state, event)` lists them for the table app.
+- **Georges Brugmann cards are only the 5 starting cards** (cost 1). The shuffled Public Figure deck has 21 cards, 3 of each other figure.
+- **Bots:** `Bot.decide(view, player)` returns `{ move, score, reason, alternatives }`; `playGame({ bots, oracle })` runs a game; `applyLegalMove()` skips the legality check for look-ahead. The sim CLI lives in `apps/sim` (`--games`, `--players 2,3,4,5`, `--bots`, `--seed`, `--no-invariants`, `--help`).
+
+Next steps for Phase 4 (see section 5 and Phase 4 below): `ai/projection.ts`, `ai/considerations/` (one file and one test each), `ai/plans.ts`, weights in `ai/weights/*.json`, the utility bot in `ai/bots/`, and `--log` and `--tournament` in the sim.
+
 ## 1. Goal
 
 Build a web app that plays **Bruxelles 1893** (Pearl Games / Z-Man, 2013 edition) as one or more bot opponents at a physical table. The bot should play like a real player. It reads the full game state (its own collection, economy, materials, tracks, and the opponents' positions), builds a plan that fits its circumstances, and changes that plan when the circumstances change. It should not just block spaces or follow a fixed script.
@@ -44,26 +76,30 @@ The app must stay fully usable offline once loaded (PWA in Phase 6), because gam
 ## 3. Repository layout
 
 ```
-bruxelles-automa/
+brux-de-luxe/
 ├─ PLAN.md
 ├─ CLAUDE.md
 ├─ docs/
 │  ├─ rules-summary.md        # condensed rules, written from the rulebook
-│  ├─ rules-questions.md      # open rule ambiguities + decisions taken
-│  └─ data-entry-guide.md     # how to transcribe physical components
+│  ├─ rules-questions.md      # rule ambiguities + decisions taken (Q1–Q19, all answered)
+│  ├─ data-entry-guide.md     # how to transcribe physical components
+│  ├─ engine.md               # how the rules engine works
+│  └─ CHANGELOG.md            # what each phase delivered
 ├─ packages/
 │  └─ engine/
 │     ├─ src/
 │     │  ├─ data/             # component data (JSON + TS types), transcribed by hand
-│     │  ├─ state/            # GameState types, setup, (de)serialisation
-│     │  ├─ rules/            # legalMoves(), apply(), phase machine, scoring
-│     │  ├─ chance/           # ChanceOracle interface: seeded RNG + "ask the table"
+│     │  ├─ state/            # GameState, Pending, Step types; coords.ts
+│     │  ├─ rules/            # setup, legalMoves(), apply(), steps, scoring, invariants, options
+│     │  ├─ chance/           # ChanceOracle, seeded RNG, chance outcomes
 │     │  ├─ ai/
 │     │  │  ├─ projection.ts  # endgame score projection
 │     │  │  ├─ plans.ts       # Builder / ArtDealer / Politician / Opportunist
 │     │  │  ├─ considerations/ # one file per scoring term
-│     │  │  ├─ bots/          # random, greedy, utility
-│     │  │  └─ explain.ts     # human-readable reason strings
+│     │  │  ├─ bots/          # random, greedy (done), utility (Phase 4)
+│     │  │  ├─ explain.ts     # human-readable move descriptions
+│     │  │  ├─ play.ts        # playGame(): bots against each other
+│     │  │  └─ types.ts       # Bot, BotDecision
 │     │  └─ index.ts
 │     └─ test/
 ├─ apps/
@@ -159,21 +195,21 @@ Knobs: sampling temperature, projection quality (simple / full), opponent modell
 
 Each phase ends with green CI and a short entry in `docs/CHANGELOG.md`.
 
-### Phase 0: Scaffolding
+### Phase 0: Scaffolding (done)
 
 - pnpm monorepo, TS strict, ESLint + Prettier, Vitest, CI workflow.
 - Empty `engine`, `sim`, `web` packages that build.
 - `docs/rules-summary.md` written from the rulebook; `docs/rules-questions.md` started.
 - **Done when:** `pnpm i && pnpm check && pnpm test` passes in CI.
 
-### Phase 1: Component data
+### Phase 1: Component data (done)
 
 - TS types + JSON for all components, with `TODO_DATA` placeholders.
 - `docs/data-entry-guide.md` written.
 - Data-completeness tests (these fail until Hans fills in values; mark them `skip` behind an env flag so CI can still pass).
 - **Done when:** types are agreed and the data entry guide is clear enough for Hans to transcribe the components.
 
-### Phase 2: Rules engine
+### Phase 2: Rules engine (done)
 
 Implement in order, each with unit tests based on the rulebook examples:
 
@@ -189,14 +225,14 @@ Implement in order, each with unit tests based on the rulebook examples:
 - Rulebook examples become tests: Sale example (2 BF + 6 VP), compass examples, shield majority example, end-game scoring example (blue player), Public Figure payment example.
 - **Done when:** a seeded random game runs from setup to final scoring with no illegal states, and all rulebook-example tests pass.
 
-### Phase 3: Simulator + baseline bots
+### Phase 3: Simulator + baseline bots (done)
 
 - `RandomBot`, `GreedyBot` (maximise immediate VP+BF).
 - `pnpm sim --games 1000 --players 3 --bots greedy,random,random --seed 42` → win rates, average scores, score breakdowns, action frequencies.
 - Property tests: game always terminates; state invariants hold (counts of cubes, coins, assistants, tiles are conserved).
 - **Done when:** 10,000 random games run without errors.
 
-### Phase 4: Utility bot v1
+### Phase 4: Utility bot v1 (next)
 
 - Projection, considerations, plans, explanation strings.
 - Decision logs (`--log`) with the top-3 alternatives per decision.
@@ -245,10 +281,4 @@ Implement in order, each with unit tests based on the rulebook examples:
 
 ## 8. Open questions for Hans
 
-Kept up to date in `docs/rules-questions.md`. Initial list:
-
-1. Does the Fiftieth Anniversary Park action trigger secondary actions for a building owner? (It does not place an assistant on the Art Nouveau board.)
-2. 2-player neutral assistants: are they counted for column auctions at all (no bid), and how are they removed at the end of the round?
-3. Can a player tuck a Bonus card won in a tie? (The rulebook says the card is discarded and the tied players get the central power.)
-4. When the Work of Art stacks run out and are rebuilt from the shop, is the covered-work order preserved for the two top tiles?
-5. Any house rules the group uses.
+None at the moment. Rule questions and their answers live in `docs/rules-questions.md` (Q1–Q19, all answered). New ambiguities go there, with the literal reading implemented behind an option in `engine/src/rules/options.ts`.
