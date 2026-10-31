@@ -2,12 +2,12 @@
   "startingBrugmannCost": "TODO_DATA",
   "deck": [
     { "figure": "georgesBrugmann", "costs": [] },
-    { "figure": "ernestSolvay", "costs": "TODO_DATA" },
-    { "figure": "charlesBuls", "costs": "TODO_DATA" },
-    { "figure": "henryVanDeVelde", "costs": "TODO_DATA" },
-    { "figure": "edouardEmpain", "costs": "TODO_DATA" },
-    { "figure": "princeAlbert", "costs": "TODO_DATA" },
-    { "figure": "emileVandervelde", "costs": "TODO_DATA" },
-    { "figure": "mauriceMaeterlinck", "costs": "TODO_DATA" }
+    { "figure": "ernestSolvay", "costs": [2, 2, 2] },
+    { "figure": "charlesBuls", "costs": [3, 3, 3] },
+    { "figure": "henryVanDeVelde", "costs": [4, 4, 4] },
+    { "figure": "edouardEmpain", "costs": [2, 2, 2] },
+    { "figure": "princeAlbert", "costs": [3, 3, 3] },
+    { "figure": "emileVandervelde", "costs": [4, 4, 4] },
+    { "figure": "mauriceMaeterlinck", "costs": [5, 5, 5] }
   ]
 }

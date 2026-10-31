@@ -1,9 +1,1 @@
-{
-  "colorTiles": {
-    "blue": "TODO_DATA",
-    "pink": "TODO_DATA",
-    "yellow": "TODO_DATA",
-    "green": "TODO_DATA"
-  },
-  "blackTiles": "TODO_DATA"
-}
+{ "colorTiles": { "blue": 6, "pink": 6, "yellow": 6, "green": 6 }, "blackTiles": 6 }

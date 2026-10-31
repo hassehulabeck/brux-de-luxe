@@ -1,8 +1,74 @@
 [
   {
-    "copies": "TODO_DATA",
-    "mannekenPis": "TODO_DATA",
-    "vpSymbols": "TODO_DATA",
-    "power": "TODO_DATA"
+    "copies": 4,
+    "mannekenPis": 1,
+    "vpSymbols": 1,
+    "power": { "kind": "single", "effect": "royalPalace" }
+  },
+  {
+    "copies": 4,
+    "mannekenPis": 1,
+    "vpSymbols": 1,
+    "power": { "kind": "single", "effect": "cityHall" }
+  },
+  {
+    "copies": 4,
+    "mannekenPis": 1,
+    "vpSymbols": 1,
+    "power": { "kind": "single", "effect": "architect" }
+  },
+  {
+    "copies": 4,
+    "mannekenPis": 1,
+    "vpSymbols": 1,
+    "power": { "kind": "single", "effect": "courthouse" }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 0,
+    "vpSymbols": 2,
+    "power": { "kind": "double", "effects": ["architect", "architect"] }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 0,
+    "vpSymbols": 2,
+    "power": { "kind": "double", "effects": ["courthouse", "courthouse"] }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 0,
+    "vpSymbols": 2,
+    "power": { "kind": "double", "effects": ["royalPalace", "royalPalace"] }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 0,
+    "vpSymbols": 2,
+    "power": { "kind": "double", "effects": ["cityHall", "cityHall"] }
+  },
+  {
+    "copies": 2,
+    "mannekenPis": 2,
+    "vpSymbols": 0,
+    "power": { "kind": "choice", "options": ["cityHall", "courthouse"] }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 2,
+    "vpSymbols": 0,
+    "power": { "kind": "choice", "options": ["architect", "royalPalace"] }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 2,
+    "vpSymbols": 0,
+    "power": { "kind": "choice", "options": ["architect", "courthouse"] }
+  },
+  {
+    "copies": 1,
+    "mannekenPis": 2,
+    "vpSymbols": 0,
+    "power": { "kind": "choice", "options": ["cityHall", "royalPalace"] }
   }
 ]

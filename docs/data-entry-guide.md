@@ -48,7 +48,12 @@ For each strip, enter:
 - `"basicSide"`: the 5 actions **left to right**, holding the strip the way it lies on the board. Use these names: `"workshop"`, `"sale"`, `"royalTheater"`, `"materials"`, `"construction"`.
 
 ```json
-{ "id": "1", "basicSide": ["sale", "workshop", "construction", "materials", "royalTheater"] }
+[
+  {
+    "id": "1",
+    "basicSide": ["sale", "royalTheater", "materials", "construction", "workshop"]
+  }
+]
 ```
 
 ## 2. Workshop: `workshop.json` (pre-filled, please check)
@@ -88,23 +93,23 @@ For each card:
 ```json
 {
   "id": 1,
-  "bf": 4,
+  "bf": 5,
   "shields": {
     "2": [
-      { "row": 1, "col": 1 },
-      { "row": 4, "col": 4 }
-    ],
-    "3": [
-      { "row": 2, "col": 3 },
-      { "row": 3, "col": 2 }
-    ],
-    "4": [
-      { "row": 1, "col": 4 },
-      { "row": 4, "col": 1 }
-    ],
-    "5": [
       { "row": 2, "col": 2 },
       { "row": 3, "col": 3 }
+    ],
+    "3": [
+      { "row": 3, "col": 4 },
+      { "row": 4, "col": 3 }
+    ],
+    "4": [
+      { "row": 1, "col": 3 },
+      { "row": 3, "col": 1 }
+    ],
+    "5": [
+      { "row": 1, "col": 4 },
+      { "row": 4, "col": 1 }
     ]
   }
 }
@@ -123,20 +128,12 @@ For each card:
   - both (a "double power", e.g. +2 Royal Palace): `{ "kind": "double", "effects": ["royalPalace", "royalPalace"] }`
 
 ```json
-[
-  {
-    "copies": 3,
-    "mannekenPis": 1,
-    "vpSymbols": 1,
-    "power": { "kind": "single", "effect": "cityHall" }
-  },
-  {
-    "copies": 2,
-    "mannekenPis": 0,
-    "vpSymbols": 2,
-    "power": { "kind": "choice", "options": ["architect", "courthouse"] }
-  }
-]
+{
+  "copies": 4,
+  "mannekenPis": 1,
+  "vpSymbols": 1,
+  "power": { "kind": "single", "effect": "royalPalace" }
+}
 ```
 
 If a card shows something that doesn't fit these shapes, tell Claude.
@@ -165,7 +162,7 @@ Count the 30 tiles by color: four colors in the color stack, plus the black tile
 The year on each of the 5 tiles, in round order. The rulebook says they run from 1893 to 1910. These are only used for display.
 
 ```json
-{ "years": [1893, 1895, 1900, 1905, 1910] }
+{ "years": [1893, 1894, 1897, 1905, 1910] }
 ```
 
 ---
