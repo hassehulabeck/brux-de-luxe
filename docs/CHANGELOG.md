@@ -21,3 +21,4 @@
 - From the rulebook illustrations: strips are rows; shield rows are numbered from the bottom (fixed in `coords.ts`); Workshop grid, City Hall, Royal Palace and Architect tracks, and the needle start are pre-filled for Hans to check. The Workshop values are tested against the two Sale examples.
 - Hans answered Q2 (the whole Workshop cursor stays on the grid), Q4 (Sale cursor moves up to N spaces), Q5 (a blocked needle can't turn, so the other one turns) and Q12 (Brugmann cards are never in the deck). The validator now rejects Brugmann cards in the deck.
 - Hans confirmed Q3 (Park gives no secondary action), Q6 (a Joker replaces a unit of any type), Q7 (money is unlimited), Q8 (stack rebuild) and Q11 (no Courthouse when nobody used Brussels).
+- Hans answered Q9 (neutral Assistants return to their owners at the end of the round) and Q13 (no house rules). All rules questions are now closed.

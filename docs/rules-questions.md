@@ -53,10 +53,10 @@ The game has 76 × 1 BF and 12 × 5 BF coins (136 BF). The rulebook only says No
 
 ## Phase C: resolution
 
-### Q9. 2-player neutral Assistants (partly answered by the rulebook)
+### Q9. 2-player neutral Assistants (decided by the rulebook and Hans)
 
 Appendix 3 (p. 12) answers most of this. Neutral Assistants have no bid, so they never affect an auction. They count for shield majorities: if the neutral color wins, nobody scores, but on a tie the tied players score as normal.
-**Still open:** removal at the end of the round. **Literal reading:** they return to their owners like any other Assistant (End of Turn phase, p. 10).
+**Decided (Hans):** at the end of the round they return to their owners like any other Assistant (End of Turn phase, p. 10).
 
 ### Q10. Can a Bonus card won in a tie be tucked? (decided by the rulebook)
 
@@ -74,4 +74,6 @@ Are the 5 starting Georges Brugmann cards part of the 26 Public Figure cards, an
 
 ## House rules
 
-### Q13. Any house rules the group uses? (open)
+### Q13. Any house rules the group uses? (decided by Hans)
+
+No house rules. The engine follows the rulebook plus the decisions recorded here.
