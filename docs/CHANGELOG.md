@@ -8,3 +8,13 @@
 - CI workflow: install, `pnpm check`, `pnpm test`, web build.
 - `docs/rules-summary.md` (written from the rulebook) and `docs/rules-questions.md` started.
 - Note: TypeScript 7 is not used yet, because `typescript-eslint` and `vue-tsc` only support up to TypeScript 6.0.
+
+## Phase 1: Component data (2026-10-31)
+
+- `engine/src/data/types.ts`: the game vocabulary (actions, colors, materials, compass tiles, Bonus effects, Public Figures) and the shape of all component data.
+- `engine/src/data/rulebook.ts`: every value stated in the rulebook text, with page references.
+- `engine/src/data/json/`: one JSON file per component, with `TODO_DATA` wherever a value is only printed on the physical component.
+- `engine/src/data/validate.ts`: dependency-free validator. It reports missing values (`TODO_DATA`) and invalid values (with their exact path) separately, and checks totals against the rulebook's component counts.
+- `engine/src/state/coords.ts`: Art Nouveau space ↔ shield mapping.
+- Tests: validator behaviour (with clearly fake fixture data), a shape check of the real data that always runs, and a completeness check behind `CHECK_DATA=1` (`pnpm check:data`).
+- `docs/data-entry-guide.md` written.

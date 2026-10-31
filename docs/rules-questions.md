@@ -10,6 +10,8 @@ Status: **open** (waiting for Hans), **decided** (answer recorded), **literal** 
 
 The rulebook says "assemble the 5 Action strips and place them above the Bonus strip" (p. 2). That fits both 5 horizontal strips stacked on top of each other and 5 vertical strips side by side. PLAN.md says "which strip in which column", but that needs checking against the physical game. It decides how a strip's data maps onto the 5×5 board.
 
+Related: is shield row 1 the **top** row and shield column 1 the **left** column? `state/coords.ts` assumes so. The Stock Exchange card data depends on it.
+
 ### Q2. Workshop cursor bounds (open)
 
 Can the Workshop cursor be moved so that one of its colored dots lies outside the printed grid? If not, which cursor center positions are legal? This is needed together with the Workshop data (see `data-entry-guide.md`).
