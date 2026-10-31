@@ -1,0 +1,13 @@
+{
+  "startingBrugmannCost": 1,
+  "deck": [
+    { "figure": "georgesBrugmann", "costs": [] },
+    { "figure": "ernestSolvay", "costs": [2, 2, 2] },
+    { "figure": "charlesBuls", "costs": [3, 3, 3] },
+    { "figure": "henryVanDeVelde", "costs": [4, 4, 4] },
+    { "figure": "edouardEmpain", "costs": [2, 2, 2] },
+    { "figure": "princeAlbert", "costs": [3, 3, 3] },
+    { "figure": "emileVandervelde", "costs": [4, 4, 4] },
+    { "figure": "mauriceMaeterlinck", "costs": [5, 5, 5] }
+  ]
+}

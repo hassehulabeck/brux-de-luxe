@@ -6,3 +6,6 @@ coverage/
 .env
 .env.*
 *.log
+
+# The official rulebook is copyrighted; keep it local only
+*.pdf

@@ -1,0 +1,25 @@
+{
+  "orientation": "row",
+  "strips": [
+    {
+      "id": "1",
+      "basicSide": ["sale", "royalTheater", "materials", "construction", "workshop"]
+    },
+    {
+      "id": "2",
+      "basicSide": ["workshop", "sale", "royalTheater", "materials", "construction"]
+    },
+    {
+      "id": "3",
+      "basicSide": ["construction", "workshop", "sale", "royalTheater", "materials"]
+    },
+    {
+      "id": "4",
+      "basicSide": ["materials", "construction", "workshop", "sale", "royalTheater"]
+    },
+    {
+      "id": "5",
+      "basicSide": ["royalTheater", "materials", "construction", "workshop", "sale"]
+    }
+  ]
+}
