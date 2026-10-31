@@ -19,6 +19,8 @@ pnpm format         # prettier --write
 pnpm check:data     # fails until every TODO_DATA in engine/src/data/json is filled in
 pnpm --filter engine test
 pnpm sim -- --games 1000 --players 3 --bots utility,greedy,random --seed 42
+pnpm sim -- --tournament --seed 42   # fixed matchups, --games games each (default 100)
+pnpm sim -- --games 1 --bots utility,greedy,greedy --log decisions.jsonl   # decision log
 pnpm --filter web dev
 pnpm --filter web build
 ```
@@ -30,7 +32,7 @@ Run `pnpm check && pnpm test` before telling Hans a task is done. If you add a s
 - `packages/engine`: pure TypeScript rules engine + AI. **No runtime dependencies, no DOM, no Node APIs.**
 - `apps/sim`: Node CLI for bot-vs-bot simulation and weight tuning.
 - `apps/web`: Vue 3 + Vite + Pinia table app (static build, PWA).
-- `docs/`: rules summary, open rule questions, data entry guide, changelog.
+- `docs/`: rules summary, open rule questions, data entry guide, engine and AI guides, changelog.
 
 ## Hard rules
 
