@@ -1,0 +1,13 @@
+{
+  "startingBrugmannCost": "TODO_DATA",
+  "deck": [
+    { "figure": "georgesBrugmann", "costs": "TODO_DATA" },
+    { "figure": "ernestSolvay", "costs": "TODO_DATA" },
+    { "figure": "charlesBuls", "costs": "TODO_DATA" },
+    { "figure": "henryVanDeVelde", "costs": "TODO_DATA" },
+    { "figure": "edouardEmpain", "costs": "TODO_DATA" },
+    { "figure": "princeAlbert", "costs": "TODO_DATA" },
+    { "figure": "emileVandervelde", "costs": "TODO_DATA" },
+    { "figure": "mauriceMaeterlinck", "costs": "TODO_DATA" }
+  ]
+}
