@@ -34,7 +34,7 @@ Decisions taken along the way that differ from or add to the plan below:
 
 - **Utility bot:** in 3-player games (1,000 games, seed 42), `utility` beats two `greedy` bots 100% of the time with an average of 154.0 VP. How it thinks: `docs/ai.md`. It leans hard on tuck row 4 and rarely uses the Stock Exchange or Grand Plaza: a first thing to check in Phase 5.
 
-- **Tuning:** `utility:tuned` (`ai/weights/tuned.json`) beats the hand-made weights 70% of the time in 3-player games against two of them, and 85% head to head. It plays mostly as an Art Dealer (works and tuck row 2). The table app still has to choose between the two sets.
+- **Tuning:** `utility:tuned` (`ai/weights/tuned.json`) beats the hand-made weights 70% of the time in 3-player games against two of them, and 85% head to head. It plays mostly as an Art Dealer (works and tuck row 2). **Hans chose the hand-made `default` set for the table app** (it builds and varies its play more). `tuned` stays available in the simulator.
 
 Next steps for Phase 6 (see Phase 6 below): the Vue table app.
 
