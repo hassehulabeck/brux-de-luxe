@@ -11,7 +11,7 @@ import {
   type GameState,
   type Move,
 } from '@brux/engine';
-import { createBot, type BotName } from './bots';
+import { createBot } from './bots';
 import type { MatchOptions } from './args';
 import { logEntry, type DecisionLogEntry } from './log';
 
@@ -25,6 +25,8 @@ export interface EntryStats {
   breakdown: Omit<FinalScore, 'player' | 'total' | 'rows'> & { rows: number[] };
   /** How often each kind of decision was chosen. */
   actions: Record<string, number>;
+  /** BF left at the end of the game, added up over the seats. */
+  finalBf: number;
 }
 
 export interface GameError {
@@ -40,6 +42,8 @@ export interface MatchResult {
   milliseconds: number;
   entries: EntryStats[];
   errors: GameError[];
+  /** Each played game's final score per entry (undefined for entries not in that game). */
+  gameScores: (number | undefined)[][];
 }
 
 export interface MatchHooks {
@@ -53,6 +57,7 @@ export function runMatch(options: MatchOptions, hooks: MatchHooks = {}): MatchRe
   const labels = entryLabels(options.bots);
   const entries = labels.map(newEntry);
   const errors: GameError[] = [];
+  const gameScores: (number | undefined)[][] = [];
   let totalMoves = 0;
 
   for (let game = 0; game < options.games; game++) {
@@ -63,7 +68,7 @@ export function runMatch(options: MatchOptions, hooks: MatchHooks = {}): MatchRe
       options.bots.length === 1 ? 0 : (seat + game) % playerCount,
     );
     const bots = entryForSeat.map((entry, seat) =>
-      createBot(options.bots[entry] as BotName, seed + seat + 1),
+      createBot(options.bots[entry]!, seed + seat + 1, options.weightSets),
     );
     try {
       const { final, moves } = playGame({
@@ -79,6 +84,9 @@ export function runMatch(options: MatchOptions, hooks: MatchHooks = {}): MatchRe
       });
       totalMoves += moves.length;
       recordScores(final, entries, entryForSeat);
+      const byEntry: (number | undefined)[] = entries.map(() => undefined);
+      for (const score of final.final ?? []) byEntry[entryForSeat[score.player]!] = score.total;
+      gameScores.push(byEntry);
     } catch (error) {
       errors.push({ game, seed, message: error instanceof Error ? error.message : String(error) });
     }
@@ -92,7 +100,25 @@ export function runMatch(options: MatchOptions, hooks: MatchHooks = {}): MatchRe
     milliseconds: Date.now() - started,
     entries,
     errors,
+    gameScores,
   };
+}
+
+/**
+ * How often entry `a` scored more than entry `b` in the games they both
+ * played (ties count half). The tuner's measure: it ignores the other seats.
+ */
+export function headToHead(result: MatchResult, a: number, b: number): number {
+  let wins = 0;
+  let games = 0;
+  for (const scores of result.gameScores) {
+    const sa = scores[a];
+    const sb = scores[b];
+    if (sa === undefined || sb === undefined) continue;
+    games++;
+    wins += sa > sb ? 1 : sa === sb ? 0.5 : 0;
+  }
+  return games === 0 ? 0 : wins / games;
 }
 
 /** A different, reproducible seed for every game of a run. */
@@ -154,6 +180,7 @@ function recordScores(final: GameState, entries: EntryStats[], entryForSeat: num
     score.rows.forEach((row, i) => (b.rows[i]! += row));
     b.nobleMaterials += score.nobleMaterials;
     b.mannekenPis += score.mannekenPis;
+    entry.finalBf += final.players[score.player]?.bf ?? 0;
   }
 }
 
@@ -171,6 +198,7 @@ function newEntry(label: string): EntryStats {
       mannekenPis: 0,
     },
     actions: {},
+    finalBf: 0,
   };
 }
 

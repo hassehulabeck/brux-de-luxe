@@ -6,10 +6,11 @@
  */
 
 import type { MatchOptions } from './args';
-import type { BotName } from './bots';
+import type { BotSpec } from './bots';
+import { formatWarnings } from './degeneracy';
 import { runMatch, type MatchHooks, type MatchResult } from './match';
 
-export const MATCHUPS: BotName[][] = [
+export const MATCHUPS: BotSpec[][] = [
   ['utility', 'greedy', 'greedy'],
   ['utility', 'random', 'random'],
   ['utility', 'greedy'],
@@ -34,9 +35,16 @@ export function formatTournament(results: MatchResult[]): string {
     return `${r.options.bots.length}p  ${cells.join('  ·  ')}${r.errors.length ? `  [${r.errors.length} failed]` : ''}`;
   });
   const first = results[0];
+  const warnings = results.flatMap((r) =>
+    formatWarnings(r.entries.filter((e) => e.label.startsWith('utility'))).map(
+      (w) => `  ${r.options.bots.length}p ${w}`,
+    ),
+  );
   return [
     `Tournament: ${first?.games ?? 0} games per matchup, seed ${first?.options.seed ?? '-'}`,
     'Win rate (average score) per bot:',
     ...rows,
+    'Degenerate strategies (utility bots):',
+    ...(warnings.length ? warnings : ['  none']),
   ].join('\n');
 }

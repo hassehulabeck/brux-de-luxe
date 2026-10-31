@@ -1,8 +1,11 @@
+import { resolve } from 'node:path';
+import { WEIGHT_SETS } from '@brux/engine';
 import { parseSimArgs, UsageError } from './args';
 import { openLog } from './log';
 import { runMatch, type MatchHooks } from './match';
 import { formatReport } from './report';
 import { formatTournament, MATCHUPS, runTournament } from './tournament';
+import { formatStep, tune, writeWeights } from './tune';
 
 try {
   const options = parseSimArgs(process.argv.slice(2));
@@ -18,7 +21,25 @@ try {
     ...(log ? { onDecision: log.write } : {}),
   };
 
-  if (options.tournament) {
+  if (options.tune) {
+    const start = WEIGHT_SETS[options.from];
+    if (!start) throw new UsageError(`--from: unknown weight set "${options.from}"`);
+    // pnpm runs the script in apps/sim: a relative --out is relative to where it was typed.
+    const out = resolve(process.env.INIT_CWD ?? process.cwd(), options.out);
+    console.log(
+      `Tuning from "${options.from}": ${options.iterations} steps, ${options.games} games per evaluation, seed ${options.seed}`,
+    );
+    const { steps } = tune(start, options, (step, champion) => {
+      console.log(formatStep(step));
+      if (step.accepted) writeWeights(out, champion);
+    });
+    const accepted = steps.filter((s) => s.accepted).length;
+    console.log(
+      accepted > 0
+        ? `${accepted} steps accepted; weights written to ${out}`
+        : 'No step was accepted.',
+    );
+  } else if (options.tournament) {
     const results = runTournament(options, hooks);
     process.stderr.write('\r\x1b[K');
     console.log(formatTournament(results));

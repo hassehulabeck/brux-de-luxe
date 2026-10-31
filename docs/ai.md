@@ -45,10 +45,31 @@ Each one has its own test with a hand-built state in `packages/engine/test/ai/co
 
 All numbers live in JSON, not in the code:
 
-- `ai/weights/default.json`: what resources are worth, the plans' multipliers and fitness, the considerations' weights, and the auction, shield and Courthouse parameters. Phase 5 tunes these.
+- `ai/weights/default.json`: the hand-made set from Phase 4: what resources are worth, the plans' multipliers and fitness, the considerations' weights, and the auction, shield and Courthouse parameters.
+- `ai/weights/tuned.json`: the same set after tuning (below).
 - `ai/weights/difficulty.json`: sampling temperature and top-k for Easy, Normal, Hard and Brutal.
 
+`WEIGHT_SETS` in `ai/weights/index.ts` lists the sets by name. In the simulator, `utility:tuned` is the utility bot with the tuned set, and plain `utility` uses `default`.
+
 These are the bot's opinions (for example, "a Maeterlinck activation is worth about 5 VP"). They are not component data.
+
+## Tuning
+
+```bash
+pnpm sim -- --tune --iterations 40 --games 80 --seed 42 --no-invariants
+```
+
+Hill-climbing (`apps/sim/src/tune.ts`):
+
+1. Take the current best set (the champion) and multiply 3 random weights by a random factor around 1. Chances and shares stay at most 1, weights that are 0 stay 0, and the projection's own weight stays 1 (it sets the scale of everything).
+2. Play the candidate against the champion: 3-player games of candidate, champion and greedy, seats rotating. Count the games where the candidate scored more than the champion.
+3. Games are noisy, so the candidate must win twice: more than 55% of the first games, then more than 50% of as many fresh games. Only then does it become the champion, and the file is written.
+
+`--from tuned` starts from the tuned set to continue. After tuning, check the result with the tournament: it plays the tuned set against the default one and flags degenerate strategies.
+
+## Degenerate strategies
+
+Every report (match and tournament) checks each bot for strategies a player would never fall into (`apps/sim/src/degeneracy.ts`): never using the Brussels board (under 0.5 actions per game), always tucking Bonus cards (over 90%), never building (under 0.5 Buildings per game) and hoarding money (over 20 BF left at the end).
 
 ## Speed
 
