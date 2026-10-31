@@ -2,7 +2,8 @@
  * The fixed tournament (`--tournament`): the same matchups every time, so a
  * change to the bot can be compared with a fixed seed (CLAUDE.md, AI
  * conventions). Phase 4's bar is the first matchup: utility wins at least
- * 80% against two greedy bots.
+ * 80% against two greedy bots. Phase 5's bar: utility:tuned beats plain
+ * utility (the hand-made weights).
  */
 
 import type { MatchOptions } from './args';
@@ -16,6 +17,10 @@ export const MATCHUPS: BotSpec[][] = [
   ['utility', 'greedy'],
   ['utility', 'greedy', 'greedy', 'greedy'],
   ['greedy', 'random', 'random'],
+  // Phase 5: the tuned weights against the hand-made ones.
+  ['utility:tuned', 'utility', 'utility'],
+  ['utility:tuned', 'utility'],
+  ['utility:tuned', 'greedy', 'greedy'],
 ];
 
 export function runTournament(
