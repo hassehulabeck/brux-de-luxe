@@ -10,7 +10,8 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.test.json",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:data": "CHECK_DATA=1 vitest run test/data"
   },
   "devDependencies": {
     "@types/node": "^22.20.5",

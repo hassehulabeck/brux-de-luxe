@@ -27,7 +27,7 @@ Some information in the rulebook is only shown in pictures (track values, card f
 
 ## Setup (p. 2–3)
 
-1. Randomly assemble the 5 Action strips above the Bonus strip to form the **Art Nouveau board** (5×5 action spaces). For the first games, use the side **without** the special symbol. The other side is for experienced players and is out of scope for this project.
+1. Randomly assemble the 5 Action strips above the Bonus strip to form the **Art Nouveau board** (5×5 action spaces). Each strip is one horizontal row (pictures on p. 1 and p. 3). For the first games, use the side **without** the special symbol. The other side is for experienced players and is out of scope for this project.
 2. Each player takes an Architect board and places their 6 Building tiles on it.
 3. Each player takes 4 discs and 7 Assistants: 5 Assistants in their supply, 2 in the **Courthouse**.
 4. Discs go on: the first shield of the **City Hall track**, the first Coat of Arms space of the **Royal Palace track**, the first space of the **Architect track** (on the personal board), and 0 on the scoring track.
@@ -49,7 +49,7 @@ Some information in the rulebook is only shown in pictures (track values, card f
 ### A. Stock Exchange phase (p. 4)
 
 - The first player reveals the top Stock Exchange card. Only the line for the current player count is used.
-- That line shows two shields (row, column, numbered 1–4). The first player chooses one.
+- That line shows two shields (row, column, numbered 1–4). The first player chooses one. Shield rows are numbered from the **bottom** (row 1 is next to the Bonus strip) and columns from the left (picture on p. 3).
 - The horizontal and vertical lines through the chosen shield split the 5×5 board into 4 areas. The Bracket is placed on the shield and points at the **largest** area (most action spaces). That area is the available area this round.
 
 ### B. Action phase (p. 5–7)

@@ -1,0 +1,11 @@
+{
+  "bfByRow": [6, 4, 2, 0, 2, 4, 6],
+  "vpByColumn": [6, 4, 2, 0, 2, 4, 6],
+  "cursorStart": { "row": 3, "col": 3 },
+  "dots": {
+    "blue": { "row": -1, "col": -1 },
+    "pink": { "row": -1, "col": 1 },
+    "yellow": { "row": 1, "col": 1 },
+    "green": { "row": 1, "col": -1 }
+  }
+}

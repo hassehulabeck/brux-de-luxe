@@ -14,7 +14,8 @@
     "format:check": "prettier --check .",
     "test": "pnpm -r test",
     "test:watch": "vitest",
-    "sim": "pnpm --filter @brux/sim start"
+    "sim": "pnpm --filter @brux/sim start",
+    "check:data": "pnpm --filter @brux/engine test:data"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

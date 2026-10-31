@@ -12,9 +12,11 @@ The owner is Hans, a web development instructor (PHP/Laravel background). Prefer
 
 ```bash
 pnpm install
-pnpm check          # typecheck + lint, all packages
+pnpm check          # typecheck + lint + prettier check, all packages
 pnpm test           # vitest, all packages
 pnpm test:watch
+pnpm format         # prettier --write
+pnpm check:data     # fails until every TODO_DATA in engine/src/data/json is filled in
 pnpm --filter engine test
 pnpm sim -- --games 1000 --players 3 --bots utility,greedy,random --seed 42
 pnpm --filter web dev
