@@ -67,7 +67,7 @@ Hill-climbing (`apps/sim/src/tune.ts`):
 
 `--from tuned` starts from the tuned set to continue. Run one tuning at a time: two runs would write to the same file.
 
-The Phase 5 result: `utility:tuned` wins 70% against two `utility` bots (3 players) and 85% head to head (2 players). It plays mostly as an Art Dealer: many Workshop actions, and works tucked under row 2. After tuning, check the result with the tournament: it plays the tuned set against the default one and flags degenerate strategies.
+The Phase 5 result: `utility:tuned` wins 70% against two `utility` bots (3 players) and 85% head to head (2 players). It plays mostly as an Art Dealer: many Workshop actions, and works tucked under row 2. The table app uses the hand-made `default` set (Hans's choice); `tuned` stays available in the simulator. After tuning, check the result with the tournament: it plays the tuned set against the default one and flags degenerate strategies.
 
 ## Degenerate strategies
 
