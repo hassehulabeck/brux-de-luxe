@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { parseSimArgs, UsageError } from '../src/args';
+import type { DecisionLogEntry } from '../src/log';
 import { entryLabels, gameSeed, runMatch } from '../src/match';
 import { formatReport } from '../src/report';
+import { formatTournament, MATCHUPS, runTournament } from '../src/tournament';
 
 describe('parseSimArgs', () => {
   it('reads the options from the README example', () => {
@@ -23,7 +25,16 @@ describe('parseSimArgs', () => {
       bots: ['greedy', 'random', 'random'],
       seed: 42,
       checkInvariants: true,
+      log: null,
+      tournament: false,
     });
+  });
+
+  it('reads --log and --tournament', () => {
+    const options = parseSimArgs(['--log', 'decisions.jsonl', '--tournament', '--games', '50']);
+    expect(options.log).toBe('decisions.jsonl');
+    expect(options.tournament).toBe(true);
+    expect(options.games).toBe(50);
   });
 
   it('rejects unknown bots and a bot list that does not fit the player count', () => {
@@ -77,4 +88,38 @@ describe('helpers', () => {
   it('gives each game its own seed', () => {
     expect(new Set([0, 1, 2, 3].map((g) => gameSeed(42, g))).size).toBe(4);
   });
+});
+
+describe('decision log', () => {
+  it('logs every bot decision with its reason and up to 3 alternatives', () => {
+    const entries: DecisionLogEntry[] = [];
+    runMatch(
+      {
+        games: 1,
+        players: [3],
+        bots: ['utility', 'greedy', 'random'],
+        seed: 2,
+        checkInvariants: false,
+      },
+      { onDecision: (entry) => entries.push(entry) },
+    );
+    const utility = entries.filter((e) => e.bot === 'utility');
+    expect(utility.length).toBeGreaterThan(20);
+    expect(utility.every((e) => e.plan !== null && e.reason.length > 0)).toBe(true);
+    expect(entries.every((e) => e.alternatives.length <= 3)).toBe(true);
+    expect(entries[0]).toMatchObject({ game: 0, round: 1 });
+    // Every line is plain JSON.
+    expect(JSON.parse(JSON.stringify(utility[0]))).toEqual(utility[0]);
+  });
+});
+
+describe('tournament', () => {
+  it('plays every matchup and reports each bot', () => {
+    const results = runTournament({ games: 1, seed: 3, checkInvariants: false });
+    expect(results).toHaveLength(MATCHUPS.length);
+    expect(results.every((r) => r.errors.length === 0)).toBe(true);
+    const text = formatTournament(results);
+    expect(text).toContain('Tournament: 1 games per matchup, seed 3');
+    expect(text).toContain('utility');
+  }, 30_000);
 });
