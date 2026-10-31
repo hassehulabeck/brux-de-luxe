@@ -1,0 +1,12 @@
+export { apply, IllegalMoveError } from './apply';
+export { legalMoves, cursorPositions } from './legal-moves';
+export { newGame, type NewGameOptions } from './setup';
+export { DEFAULT_RULES, type RuleOptions } from './options';
+export { sameMove, canonicalJson, type Move, type ChanceMove, type PlayerMove } from './moves';
+export type { ConstructionPayment } from './moves';
+export { constructionPayments } from './compass';
+export { largestArea } from './stock-exchange';
+export { finalScore, finalScores } from './end';
+export { shieldWinners } from './resolution';
+export { assertInvariants } from './invariants';
+export { visibleState } from './visible';
