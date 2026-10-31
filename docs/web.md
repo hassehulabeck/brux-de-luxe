@@ -33,4 +33,4 @@ The bots use the hand-made `default` weight set. They remember their plan from r
 
 ## Deploying
 
-`.github/workflows/deploy.yml` builds the app on every push to `main` and uploads `apps/web/dist` over FTP. It needs four repository secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` and `FTP_SERVER_DIR` (ending in `/`). Until they are set, it builds and skips the upload. The build uses relative paths, so it works in any folder on the web hotel.
+`.github/workflows/deploy.yml` builds the app on every push to `main` and uploads `apps/web/dist` over SFTP (the web hotel's protocol) with `lftp`. It needs four repository secrets: `FTP_SERVER` (host name only), `FTP_USERNAME`, `FTP_PASSWORD` and `FTP_SERVER_DIR` (the folder on the server). `FTP_PORT` is optional (default 22). The upload adds and replaces files; it never deletes anything on the server. Until they are set, it builds and skips the upload. The build uses relative paths, so it works in any folder on the web hotel.

@@ -1,8 +1,9 @@
 name: Deploy
 
-# Builds the table app and uploads it to the web hotel over FTP on every push
+# Builds the table app and uploads it to the web hotel over SFTP on every push
 # to main. Needs these repository secrets (Settings → Secrets → Actions):
-# FTP_SERVER, FTP_USERNAME, FTP_PASSWORD and FTP_SERVER_DIR (ending in "/").
+# FTP_SERVER (host name only), FTP_USERNAME, FTP_PASSWORD and FTP_SERVER_DIR
+# (the folder on the server). Optional: FTP_PORT (default 22).
 # Until they are set, the workflow builds and skips the upload.
 
 on:
@@ -33,15 +34,23 @@ jobs:
       - run: pnpm test
       - run: pnpm --filter @brux/web build
 
+      # lftp mirrors dist/ to the server folder over SFTP (SSH). It only adds
+      # and replaces files; nothing on the server is deleted.
       - name: Upload to the web hotel
         if: env.FTP_SERVER != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          local-dir: apps/web/dist/
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          # lftp --env-password reads the password from LFTP_PASSWORD.
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_SERVER_DIR: ${{ secrets.FTP_SERVER_DIR }}
+          FTP_PORT: ${{ secrets.FTP_PORT || '22' }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp > /dev/null
+          lftp -u "$FTP_USERNAME" --env-password -p "$FTP_PORT" "sftp://$FTP_SERVER" -e "
+            set sftp:auto-confirm yes;
+            set net:max-retries 2;
+            mirror --reverse --verbose apps/web/dist/ \"$FTP_SERVER_DIR\";
+            quit"
 
       - name: No FTP secrets yet
         if: env.FTP_SERVER == ''
