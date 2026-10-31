@@ -1,18 +1,12 @@
 <script setup lang="ts">
-import { ENGINE_NAME } from '@brux/engine';
+import GameScreen from './components/GameScreen.vue';
+import SetupWizard from './components/SetupWizard.vue';
+import { useGameStore } from './stores/game';
+
+const game = useGameStore();
 </script>
 
 <template>
-  <main class="placeholder">
-    <h1>Bruxelles 1893 Automa</h1>
-    <p>The table app arrives in Phase 6. Engine loaded: {{ ENGINE_NAME }}.</p>
-  </main>
+  <GameScreen v-if="game.session" />
+  <SetupWizard v-else />
 </template>
-
-<style scoped>
-.placeholder {
-  max-width: 40rem;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-</style>

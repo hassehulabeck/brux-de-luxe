@@ -1,0 +1,12 @@
+{
+  "name": "Bruxelles 1893 Automa",
+  "short_name": "Brux Automa",
+  "description": "Bot opponents for Bruxelles 1893 at the table.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf7f0",
+  "theme_color": "#8a4b14",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
