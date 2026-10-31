@@ -1,0 +1,25 @@
+{
+  "name": "@brux/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Tablet-first table app: humans enter moves, bots announce theirs.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc -p tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@brux/engine": "workspace:*",
+    "vue": "^3.5.44"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.10",
+    "typescript": "~6.0.3",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5",
+    "vue-tsc": "^3.3.14"
+  }
+}
