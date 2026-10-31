@@ -2,11 +2,14 @@
 import { computed, ref, watch } from 'vue';
 import {
   ACTION_NAMES,
+  BONUS_EFFECT_NAMES,
+  cannotPerformReason,
   describeMove,
   type ArtNouveauSpace,
   type GameState,
   type Move,
 } from '@brux/engine';
+import { bonusCardLabel } from '../game/labels';
 import type { SeatConfig } from '../game/session';
 import WorkshopView from './WorkshopView.vue';
 
@@ -81,6 +84,34 @@ function moveCursor(to: { row: number; col: number }) {
   emit('enter', { kind: 'moveCursor', to });
 }
 
+// --- Carry out an action, or why it can't be done -------------------------------
+const cannotPerform = computed(() => {
+  const p = pending.value;
+  return p.kind === 'performOrSkip' ? cannotPerformReason(props.state, p.player, p.action) : null;
+});
+
+// --- Bonus cards: one group per won card, named by its column ---------------------
+const bonusGroups = computed(() => {
+  if (pending.value.kind !== 'resolveBonus') return [];
+  const won = props.state.round.bonusWon;
+  return won.flatMap((card, index) => {
+    const moves = props.moves.filter(
+      (m) => (m.kind === 'useBonus' || m.kind === 'tuckBonus') && m.card === index,
+    );
+    if (moves.length === 0) return [];
+    const title = `Column ${card.column + 1}: ${bonusCardLabel(card.card)}`;
+    return [{ title: card.tied ? `${title} (tied: power only)` : title, moves }];
+  });
+});
+function bonusOption(move: Move): string {
+  if (move.kind === 'useBonus') {
+    const card = props.state.round.bonusWon[move.card]?.card ?? -1;
+    // A single or double card: the power is the first part of the card's label.
+    return `Use: ${move.choice ? BONUS_EFFECT_NAMES[move.choice] : bonusCardLabel(card).split(' · ')[0]}`;
+  }
+  return move.kind === 'tuckBonus' ? `Tuck under row ${move.row}` : describeMove(props.state, move);
+}
+
 /** Decisions made on the board itself: GameScreen handles the taps. */
 const onBoard = computed(() => ['placeBuilding', 'placeNeutral'].includes(pending.value.kind));
 </script>
@@ -121,11 +152,30 @@ const onBoard = computed(() => ['placeBuilding', 'placeNeutral'].includes(pendin
 
     <p v-else-if="onBoard" class="hint">The spaces you can choose are outlined.</p>
 
-    <div v-else class="options">
-      <button v-for="(move, i) in moves" :key="i" class="big" @click="emit('enter', move)">
-        {{ describeMove(state, move) }}
-      </button>
-    </div>
+    <template v-else-if="bonusGroups.length">
+      <div v-for="group in bonusGroups" :key="group.title" class="bonus-card">
+        <h3>{{ group.title }}</h3>
+        <div class="options">
+          <button
+            v-for="(move, i) in group.moves"
+            :key="i"
+            class="big"
+            @click="emit('enter', move)"
+          >
+            {{ bonusOption(move) }}
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <template v-else>
+      <p v-if="cannotPerform" class="hint">You can't carry out this action. {{ cannotPerform }}</p>
+      <div class="options">
+        <button v-for="(move, i) in moves" :key="i" class="big" @click="emit('enter', move)">
+          {{ describeMove(state, move) }}
+        </button>
+      </div>
+    </template>
   </section>
 </template>
 
@@ -149,5 +199,11 @@ const onBoard = computed(() => ['placeBuilding', 'placeNeutral'].includes(pendin
 }
 .bid {
   margin-bottom: 0.75rem;
+}
+.bonus-card {
+  margin-top: 0.75rem;
+}
+.bonus-card h3 {
+  margin: 0;
 }
 </style>

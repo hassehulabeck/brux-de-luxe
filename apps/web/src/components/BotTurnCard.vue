@@ -17,7 +17,7 @@ const emit = defineEmits<{ done: [] }>();
     <ol>
       <li v-for="(step, i) in turn.steps" :key="i">
         <strong>{{ step.instruction }}</strong>
-        <small>{{ step.reason }}</small>
+        <small v-if="step.reason">{{ step.reason }}</small>
       </li>
     </ol>
     <slot />

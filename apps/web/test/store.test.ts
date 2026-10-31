@@ -19,6 +19,7 @@ describe('game store', () => {
     });
     const oracle = seededOracle(11);
     let botTurns = 0;
+    const tableNotes: string[] = [];
     for (let i = 0; i < 2000 && game.state!.phase !== 'gameOver'; i++) {
       const state = game.state!;
       const actor = whoActs(state);
@@ -28,15 +29,19 @@ describe('game store', () => {
         expect(game.botTurn.steps.length).toBeGreaterThan(0);
         expect(game.botTurnDone).toBe(true);
         botTurns++;
+        tableNotes.push(...game.botTurn.steps.map((s) => s.instruction));
         game.doneWithBotTurn();
       } else {
         expect(actor).toEqual({ kind: 'seat', player: 0 });
         game.enter(legalMoves(state).at(-1)!); // the last option: passes rather than wastes money
+        tableNotes.push(...game.notes);
       }
     }
     expect(game.state!.phase).toBe('gameOver');
     expect(game.state!.final).toHaveLength(3);
     expect(botTurns).toBeGreaterThan(10);
+    // Shield scorings are told to the table, so nobody has to count majorities.
+    expect(tableNotes.some((note) => note.startsWith('Shield '))).toBe(true);
   }, 60_000);
 
   it('shows an error instead of playing an illegal move', () => {
