@@ -65,7 +65,9 @@ Hill-climbing (`apps/sim/src/tune.ts`):
 2. Play the candidate against the champion: 3-player games of candidate, champion and greedy, seats rotating. Count the games where the candidate scored more than the champion.
 3. Games are noisy, so the candidate must win twice: more than 55% of the first games, then more than 50% of as many fresh games. Only then does it become the champion, and the file is written.
 
-`--from tuned` starts from the tuned set to continue. After tuning, check the result with the tournament: it plays the tuned set against the default one and flags degenerate strategies.
+`--from tuned` starts from the tuned set to continue. Run one tuning at a time: two runs would write to the same file.
+
+The Phase 5 result: `utility:tuned` wins 70% against two `utility` bots (3 players) and 85% head to head (2 players). It plays mostly as an Art Dealer: many Workshop actions, and works tucked under row 2. After tuning, check the result with the tournament: it plays the tuned set against the default one and flags degenerate strategies.
 
 ## Degenerate strategies
 
