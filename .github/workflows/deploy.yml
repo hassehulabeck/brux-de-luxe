@@ -46,11 +46,11 @@ jobs:
           FTP_PORT: ${{ secrets.FTP_PORT || '22' }}
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq lftp > /dev/null
-          lftp -u "$FTP_USERNAME" --env-password -p "$FTP_PORT" "sftp://$FTP_SERVER" -e "
-            set sftp:auto-confirm yes;
-            set net:max-retries 2;
-            mirror --reverse --verbose apps/web/dist/ \"$FTP_SERVER_DIR\";
-            quit"
+          # A pasted secret can end in a line break, and lftp ends a command at
+          # each line break. Clean the folder and keep the command on one line.
+          DIR="$(printf '%s' "$FTP_SERVER_DIR" | tr -d '\r\n"' | sed 's/^ *//; s/ *$//')"
+          lftp -u "$FTP_USERNAME" --env-password -p "$FTP_PORT" "sftp://$FTP_SERVER" \
+            -e "set sftp:auto-confirm yes; set net:max-retries 2; mirror --reverse --verbose apps/web/dist/ \"$DIR\"; cls -1 \"$DIR\"; quit"
 
       - name: No FTP secrets yet
         if: env.FTP_SERVER == ''
