@@ -23,7 +23,7 @@ function giveFigures(draft: GameState, owner: number, figures: { figure: string;
 }
 
 describe('paying the Public Figures (p. 10)', () => {
-  it('rulebook example: 15 BF of cards and 12 BF: pay 11, give up a 4 BF card, lose 5 VP', () => {
+  it('rulebook example: 15 BF of cards and 12 BF: pay 11, give up a 4 BF card, lose 5 VP (strict option)', () => {
     const state = lastRound((draft) => {
       giveFigures(draft, 1, [
         { figure: 'ernestSolvay', cost: 2 },
@@ -32,6 +32,7 @@ describe('paying the Public Figures (p. 10)', () => {
         { figure: 'mauriceMaeterlinck', cost: 4 },
       ]);
       draft.players[1]!.bf = 11; // + 1 BF when passing = 12 BF
+      draft.rules.mustPayPublicFiguresWhenAble = true;
     });
     let ended = everyonePasses(state);
     while (ended.pending?.kind === 'resolveBonus') ended = play(ended, legalMoves(ended)[0]!);
@@ -63,10 +64,8 @@ describe('paying the Public Figures (p. 10)', () => {
     expect(paid.final?.[1]?.scoringTrack).toBe(-5);
   });
 
-  it('lets players leave any card unpaid when mustPayPublicFiguresWhenAble is off (Q19)', () => {
-    const state = lastRound((draft) => {
-      draft.rules.mustPayPublicFiguresWhenAble = false;
-    });
+  it('lets players leave any card unpaid, paying is optional (Q19)', () => {
+    const state = lastRound(() => {});
     let ended = everyonePasses(state);
     while (ended.pending?.kind === 'resolveBonus') ended = play(ended, legalMoves(ended)[0]!);
     expect(ended.pending).toEqual({ kind: 'payPublicFigures', player: 0 });
@@ -76,8 +75,10 @@ describe('paying the Public Figures (p. 10)', () => {
     ]);
   });
 
-  it('pays everything without asking when the player can afford it', () => {
-    const state = lastRound(() => {});
+  it('with mustPayPublicFiguresWhenAble on, pays everything without asking when affordable', () => {
+    const state = lastRound((draft) => {
+      draft.rules.mustPayPublicFiguresWhenAble = true;
+    });
     let ended = everyonePasses(state);
     while (ended.pending?.kind === 'resolveBonus') ended = play(ended, legalMoves(ended)[0]!);
     expect(ended.pending).toEqual({ kind: 'gameOver' });

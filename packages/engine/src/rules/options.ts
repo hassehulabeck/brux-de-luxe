@@ -29,8 +29,9 @@ export interface RuleOptions {
   secondaryActionWhenPrimarySkipped: boolean;
   /**
    * Q19. "Each player must pay the amounts indicated on the Public Figure
-   * cards that he kept." Literal: a card may only stay unpaid if the money
-   * left after paying the others can't cover it.
+   * cards that he kept." Hans: paying is optional (an unpaid card costs 5 VP),
+   * so this is off. On: a card may only stay unpaid if the money left after
+   * paying the others can't cover it.
    */
   mustPayPublicFiguresWhenAble: boolean;
 }
@@ -40,5 +41,5 @@ export const DEFAULT_RULES: RuleOptions = {
   firstPlayerTieIncludesCurrent: true,
   tiedBonusCardsCountMannekenPis: false,
   secondaryActionWhenPrimarySkipped: true,
-  mustPayPublicFiguresWhenAble: true,
+  mustPayPublicFiguresWhenAble: false,
 };

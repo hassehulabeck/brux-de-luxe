@@ -68,10 +68,10 @@ export function payAllPublicFigures(draft: GameState, owner: PlayerIndex): void 
 }
 
 /**
- * The choices of cards to leave unpaid. Players "must pay": a card may only
- * be left unpaid if the money left after paying the others can't cover it
- * (p. 10 example: 15 BF of cards, 12 BF in hand, give up one 4 BF card).
- * With `mustPayPublicFiguresWhenAble` off, any affordable choice is allowed (Q19).
+ * The choices of cards to leave unpaid (p. 10 example: 15 BF of cards, 12 BF
+ * in hand, give up one 4 BF card). Paying is optional (Q19), so any choice
+ * the player can afford is allowed. With `mustPayPublicFiguresWhenAble` on, a
+ * card may only stay unpaid if the money left can't cover it.
  */
 export function unpaidChoices(state: GameState, owner: PlayerIndex): PlayerMove[] {
   const p = player(state, owner);
