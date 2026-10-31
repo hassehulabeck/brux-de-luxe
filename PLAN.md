@@ -8,7 +8,7 @@
 | 1. Component data            | Done        | #2, #3 (#2 was merged into the Phase 0 branch by mistake; #3 brought it to `main`) |
 | 2. Rules engine              | Done        | #4                                                                                 |
 | 3. Simulator + baseline bots | Done        | #5                                                                                 |
-| 4. Utility bot v1            | Done        | #6                                                                                 |
+| 4. Utility bot v1            | Done        | #7                                                                                 |
 | **5. Tuning**                | **Next**    |                                                                                    |
 | 6–8                          | Not started |                                                                                    |
 
