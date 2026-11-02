@@ -88,3 +88,9 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - **"Only Skip" explained.** The second Building was refused correctly: the needles pointed at 3 BF and Any Noble Material, so the Building cost 1 Noble Material and 3 BF, and the bid left 2 BF. The engine's new `cannotPerformReason()` says that next to **Skip**.
 - Bot reasons that only repeat the instruction and the plan are hidden.
 - No AI behaviour changed (the events are not read by the bots), so no new tournament.
+
+## Table app polish (2026-11-02)
+
+- **Royal Theater setup**: the question names the space being filled ("the free space (far right)", then 1 BF, 2 BF, and "3 BF (far left)"), with the display drawn as it lies on the table. The shared view also shows it left to right, 3 BF first.
+- **Bonus card setup**: the five columns are shown with the one being asked highlighted, and every new chance question fades in, so it is clear the app moved on.
+- **Drawing several Works of Art**: one − / + counter per color and a confirm button, instead of a button for every combination. Only legal draws can be confirmed.
