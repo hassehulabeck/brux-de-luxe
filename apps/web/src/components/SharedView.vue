@@ -8,6 +8,8 @@ const props = defineProps<{ state: GameState }>();
 const shop = computed(() =>
   props.state.shop.map((stack) => (stack.length ? stack[stack.length - 1] : 'empty')),
 );
+/** Display positions left to right as on the table: 3 BF, 2 BF, 1 BF, free. */
+const theaterOrder = computed(() => props.state.royalTheater.display.map((_, i) => i).reverse());
 </script>
 
 <template>
@@ -43,8 +45,14 @@ const shop = computed(() =>
     <div>
       <h3>Royal Theater</h3>
       <p>
-        <span v-for="(card, i) in state.royalTheater.display" :key="i" class="tile">
-          {{ card ? PUBLIC_FIGURE_NAMES[card.figure] : '—' }} ({{ ROYAL_THEATER_COSTS[i] }} BF)
+        <!-- Left to right as on the table: 3 BF first, the free space on the far right. -->
+        <span v-for="i in theaterOrder" :key="i" class="tile">
+          {{
+            state.royalTheater.display[i]
+              ? PUBLIC_FIGURE_NAMES[state.royalTheater.display[i]!.figure]
+              : '—'
+          }}
+          ({{ ROYAL_THEATER_COSTS[i] }} BF)
         </span>
       </p>
     </div>
