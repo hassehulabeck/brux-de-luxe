@@ -109,3 +109,10 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - Slightly smaller base font and less padding below 600px. The tablet layout is unchanged.
 - The suggestion dialog is teleported to `<body>`, so it still shows when its button sits in the closed menu.
 - Checked in headless Chrome at 360, 390 and 1024px wide: setup, human turn with a bid, bot turn, the menu and the suggestion box.
+
+## Phone turns (2026-11-03)
+
+- **The board moves to the question** on one-column layouts (below 900px wide): when a human has to tap a space, the board is inside the question panel, between the question and the bid. `useMediaQuery()` (`src/composables/`) decides, because it changes what is rendered.
+- **The phone menu closes** with a tap outside it or Escape.
+- **Compact choices on phones:** two columns of smaller buttons. Long chance labels are split by `splitLabel()` into a bold first line and a smaller detail line ("City Hall +1" / "1 Manneken Pis · 1 VP symbol", "Ernest Solvay" / "costs 2 BF").
+- Checked in headless Chrome at 390px (turn, bid, menu, Public Figures, Bonus cards), 820px portrait and 1180px landscape (board stays in its own card there).

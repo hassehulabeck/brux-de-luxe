@@ -165,3 +165,16 @@ export function eventInstruction(event: TableEvent, seats: SeatConfig[]): string
 function plural(n: number, one: string, many = `${one}s`): string {
   return `${n} ${n === 1 ? one : many}`;
 }
+
+/**
+ * A long label in two lines, so it stays readable in narrow buttons: the
+ * first part in bold, the rest smaller underneath.
+ * "City Hall +1 · 1 Manneken Pis · 1 VP symbol" → "City Hall +1" / "1 Manneken Pis · 1 VP symbol"
+ * "Ernest Solvay (costs 2 BF)" → "Ernest Solvay" / "costs 2 BF"
+ */
+export function splitLabel(label: string): { main: string; detail: string } {
+  const [main = '', ...rest] = label.split(' · ');
+  if (rest.length) return { main, detail: rest.join(' · ') };
+  const brackets = /^(.+) \((.+)\)$/.exec(label);
+  return brackets ? { main: brackets[1]!, detail: brackets[2]! } : { main: label, detail: '' };
+}

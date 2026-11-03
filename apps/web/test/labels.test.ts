@@ -13,6 +13,7 @@ import {
   chanceLabel,
   stockExchangeCardLabel,
   stripLabel,
+  splitLabel,
 } from '../src/game/labels';
 
 const components = loadComponents();
@@ -55,5 +56,19 @@ describe('labels', () => {
       'red',
     );
     expect(pass).toMatch(/^Pass\. Take the Exhibition tile\. Take \d+ BF\.$/);
+  });
+});
+
+describe('splitLabel', () => {
+  it('puts the first part of a long chance label on its own line', () => {
+    expect(splitLabel('City Hall +1 · 1 Manneken Pis · 1 VP symbol')).toEqual({
+      main: 'City Hall +1',
+      detail: '1 Manneken Pis · 1 VP symbol',
+    });
+    expect(splitLabel('Ernest Solvay (costs 2 BF)')).toEqual({
+      main: 'Ernest Solvay',
+      detail: 'costs 2 BF',
+    });
+    expect(splitLabel('blue + red')).toEqual({ main: 'blue + red', detail: '' });
   });
 });
