@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { DIFFICULTY_NAMES, type DifficultyName } from '@brux/engine';
 import { useGameStore } from '../stores/game';
 import type { SeatConfig } from '../game/session';
+import SuggestionBox from './SuggestionBox.vue';
 
 const game = useGameStore();
 
@@ -90,6 +91,12 @@ async function importFile(event: Event) {
     <section class="card">
       <h2>Import a game</h2>
       <input type="file" accept="application/json,.json" @change="importFile" />
+    </section>
+
+    <section class="card">
+      <h2>Bugs and ideas</h2>
+      <p class="hint">Something wrong, or an idea for the app? Tell us.</p>
+      <SuggestionBox />
     </section>
 
     <p v-if="game.error" class="error">{{ game.error }}</p>

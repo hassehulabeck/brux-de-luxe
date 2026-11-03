@@ -7,6 +7,7 @@
 import { defineStore } from 'pinia';
 import { markRaw } from 'vue';
 import { describeMove, type Bot, type GameState, type Move } from '@brux/engine';
+import { recordError } from '../game/feedback';
 import { botInstruction, eventInstruction } from '../game/labels';
 import {
   botDecision,
@@ -86,6 +87,7 @@ export const useGameStore = defineStore('game', {
         this.session = markRaw(play(this.session, move, source));
         this.error = null;
       } catch (error) {
+        recordError(error);
         this.error = error instanceof Error ? error.message : String(error);
         return;
       }

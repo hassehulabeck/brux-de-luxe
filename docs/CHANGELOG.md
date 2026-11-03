@@ -94,3 +94,10 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - **Royal Theater setup**: the question names the space being filled ("the free space (far right)", then 1 BF, 2 BF, and "3 BF (far left)"), with the display drawn as it lies on the table. The shared view also shows it left to right, 3 BF first.
 - **Bonus card setup**: the five columns are shown with the one being asked highlighted, and every new chance question fades in, so it is clear the app moved on.
 - **Drawing several Works of Art**: one − / + counter per color and a confirm button, instead of a button for every combination. Only legal draws can be confirmed.
+
+## Suggestion box (2026-11-03)
+
+- **Suggestions** in the toolbar and on the start screen: send a bug or an idea, in the same style as Boardgamer 2000 and Kyrkospelet. It becomes a GitHub issue.
+- A bug sent during a game can attach the game (setup and moves) plus recent browser errors. The file goes to the `bug-reports` branch, and **Import** opens it.
+- Server side: `apps/web/public/api/feedback.php` on the web hotel (no new backend). Validation, a honeypot, 5 reports per visitor per 10 minutes. Token from the new `FEEDBACK_GITHUB_TOKEN` secret, written by `deploy.yml`.
+- Tests: the report the app builds and sends, and the PHP script against a fake GitHub API.

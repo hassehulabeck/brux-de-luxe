@@ -3,7 +3,8 @@ name: Deploy
 # Builds the table app and uploads it to the web hotel over SFTP on every push
 # to main. Needs these repository secrets (Settings → Secrets → Actions):
 # FTP_SERVER (host name only), FTP_USERNAME, FTP_PASSWORD and FTP_SERVER_DIR
-# (the folder on the server). Optional: FTP_PORT (default 22).
+# (the folder on the server). Optional: FTP_PORT (default 22), and
+# FEEDBACK_GITHUB_TOKEN for the suggestion box (see docs/web.md).
 # Until they are set, the workflow builds and skips the upload.
 
 on:
@@ -20,6 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
+      FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,6 +35,17 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm --filter @brux/web build
+
+      # The suggestion box (dist/api/feedback.php) files GitHub issues with
+      # this token. Without the secret the box answers "closed for now".
+      # The token is written into a PHP file, which prints nothing if fetched.
+      - name: Suggestion box config
+        if: env.FEEDBACK_GITHUB_TOKEN != ''
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          php -r 'echo "<?php\nreturn " . var_export(["token" => trim(getenv("FEEDBACK_GITHUB_TOKEN")), "repo" => getenv("REPO")], true) . ";\n";' \
+            > apps/web/dist/api/feedback-config.php
 
       # lftp mirrors dist/ to the server folder over SFTP (SSH). It only adds
       # and replaces files; nothing on the server is deleted.

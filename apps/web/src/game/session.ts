@@ -196,6 +196,9 @@ export function toSaved(session: Session): SavedGame {
 
 /** Replay a saved game. Throws if the file is not a game or a move is illegal. */
 export function fromSaved(saved: unknown): Session {
+  // A bug report from the suggestion box holds the saved game under "game".
+  const report = saved as { format?: unknown; game?: unknown } | null;
+  if (report?.format === 'brux-report/1') saved = report.game;
   const data = saved as Partial<SavedGame> | null;
   if (!data || data.version !== 1 || !data.config || !Array.isArray(data.moves)) {
     throw new Error('This is not a saved Bruxelles 1893 game.');

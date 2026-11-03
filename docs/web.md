@@ -18,17 +18,21 @@ pnpm --filter web build   # static files in apps/web/dist
 7. **Bonus cards**: each won card is shown with its column, so a player with two cards knows which one is which.
 8. **Game over**: the final scores, category by category.
 
+**Suggestions** (in the toolbar, and on the start screen) opens the suggestion box: a bug or an idea, a title, a description and an optional name. It becomes an issue on GitHub. A bug report sent during a game can attach the game (the setup and every move), so it can be replayed.
+
 **Undo** goes back to before the last thing a human entered (a decision or a draw), bot moves included. **Redo** plays it again. **Export** downloads the game as JSON; **Import** on the start screen loads one.
 
 ## How it is built
 
-| File                  | What it does                                                                                            |
-| --------------------- | ------------------------------------------------------------------------------------------------------- |
-| `src/game/session.ts` | The game: setup, moves, history, undo/redo, save/load, bots. Plain functions, tested without a browser. |
-| `src/game/labels.ts`  | Wording: chance outcomes as players see them, bot moves as physical instructions.                       |
-| `src/stores/game.ts`  | The Pinia store: the session, the bot turn on screen, autosave to `localStorage`.                       |
-| `src/components/`     | The screens. `DecisionPanel` arranges `legalMoves()` as buttons; it never decides what is legal.        |
-| `public/sw.js`        | Offline support: after the first visit the app works without a network.                                 |
+| File                      | What it does                                                                                            |
+| ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `src/game/session.ts`     | The game: setup, moves, history, undo/redo, save/load, bots. Plain functions, tested without a browser. |
+| `src/game/labels.ts`      | Wording: chance outcomes as players see them, bot moves as physical instructions.                       |
+| `src/stores/game.ts`      | The Pinia store: the session, the bot turn on screen, autosave to `localStorage`.                       |
+| `src/components/`         | The screens. `DecisionPanel` arranges `legalMoves()` as buttons; it never decides what is legal.        |
+| `public/sw.js`            | Offline support: after the first visit the app works without a network.                                 |
+| `src/game/feedback.ts`    | The suggestion box report: what it holds and how it is sent. `SuggestionBox.vue` is the form.           |
+| `public/api/feedback.php` | The suggestion box server side on the web hotel: checks the report and files it as a GitHub issue.      |
 
 A saved game is the setup plus the list of moves (`SavedGame` in `session.ts`). Loading replays the moves through `apply()`, so a broken file can't create an impossible state. The game is saved after every move.
 
@@ -37,3 +41,18 @@ The bots use the hand-made `default` weight set. They remember their plan from r
 ## Deploying
 
 `.github/workflows/deploy.yml` builds the app on every push to `main` and uploads `apps/web/dist` over SFTP (the web hotel's protocol) with `lftp`. It needs four repository secrets: `FTP_SERVER` (host name only), `FTP_USERNAME`, `FTP_PASSWORD` and `FTP_SERVER_DIR` (the folder on the server). `FTP_PORT` is optional (default 22). The upload adds and replaces files; it never deletes anything on the server. Until they are set, it builds and skips the upload. The build uses relative paths, so it works in any folder on the web hotel.
+
+## The suggestion box
+
+The web hotel serves the app as static files, plus one PHP script: `public/api/feedback.php` (Vite copies it to `dist/api/`). The app posts the report there as JSON. The script:
+
+1. checks it (bug or idea, title 3–120 characters, a description, a hidden honeypot field that only bots fill in),
+2. allows 5 reports per visitor (IP address) per 10 minutes,
+3. for a bug with an attached game, commits `reports/<date>/<time>-<id>.json` to the `bug-reports` branch,
+4. creates an issue titled `[Bug] …` or `[Idea] …` with the build's commit, labelled `bug` or `enhancement` plus `from-the-app`, and links the attached game.
+
+An attached game opens with **Import** on the start screen, just like an export. `@` in the text is defanged, so a report can't ping anyone on GitHub. The repository is public, so reports are too: the form says so.
+
+**Setup:** create a fine-grained GitHub token for `hassehulabeck/brux-de-luxe` only, with **Issues: Read and write** and **Contents: Read and write** (for the `bug-reports` branch). Add it as the repository secret `FEEDBACK_GITHUB_TOKEN`. `deploy.yml` then writes `dist/api/feedback-config.php`, which returns the token, and uploads it with the rest; `api/.htaccess` keeps it out of reach. Without the secret the box answers "The suggestion box is closed for now." The web hotel needs PHP 8.1 or later with curl.
+
+`test/feedback-php.test.ts` runs the script with PHP's built-in server against a fake GitHub API (skipped when `php` is not installed).
