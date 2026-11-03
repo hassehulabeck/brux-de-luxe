@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { legalMoves, type ArtNouveauSpace } from '@brux/engine';
+import { useMediaQuery } from '../composables/useMediaQuery';
 import { whoActs } from '../game/session';
 import { useGameStore } from '../stores/game';
 import BoardView from './BoardView.vue';
@@ -30,6 +31,11 @@ const moves = computed(() =>
 const selected = ref<ArtNouveauSpace | null>(null);
 // Phones: Export, New game and Suggestions sit behind a Menu button.
 const menuOpen = ref(false);
+function closeMenuOnEscape(event: KeyboardEvent) {
+  if (event.key === 'Escape') menuOpen.value = false;
+}
+onMounted(() => window.addEventListener('keydown', closeMenuOnEscape));
+onBeforeUnmount(() => window.removeEventListener('keydown', closeMenuOnEscape));
 watch(state, () => (selected.value = null));
 const boardTargets = computed(() => {
   const spaces = moves.value.flatMap((m) =>
@@ -39,6 +45,16 @@ const boardTargets = computed(() => {
   );
   return spaces.filter((s, i) => spaces.findIndex((t) => t.row === s.row && t.col === s.col) === i);
 });
+/**
+ * One-column layout (phone, portrait tablet): when a human picks a space,
+ * the board sits inside the question panel, between the question and the
+ * bid, instead of further down the page.
+ */
+const narrow = useMediaQuery('(max-width: 900px)');
+const boardInPanel = computed(
+  () => narrow.value && humanToAct.value !== null && boardTargets.value.length > 0,
+);
+
 function pickSpace(space: ArtNouveauSpace) {
   const kind = state.value.pending?.kind;
   if (kind === 'turn') selected.value = space;
@@ -83,6 +99,7 @@ function quit() {
       >
         Menu
       </button>
+      <div v-if="menuOpen" class="menu-backdrop" @click="menuOpen = false" />
       <div id="game-menu" class="more" :class="{ open: menuOpen }" @click="menuOpen = false">
         <button class="big" @click="exportGame">Export</button>
         <button class="big" @click="quit">New game</button>
@@ -133,12 +150,23 @@ function quit() {
           :selected="selected"
           @enter="game.enter($event)"
           @clear="selected = null"
-        />
+        >
+          <template v-if="boardInPanel" #board>
+            <BoardView
+              :state="state"
+              :seats="game.seats"
+              :selectable="boardTargets"
+              :selected="selected"
+              @pick="pickSpace"
+            />
+          </template>
+        </DecisionPanel>
         <p v-else class="hint">The bot is thinking…</p>
       </section>
 
       <section v-if="state.board.length" class="board-area card">
         <BoardView
+          v-if="!boardInPanel"
           :state="state"
           :seats="game.seats"
           :selectable="boardTargets"
@@ -182,7 +210,8 @@ function quit() {
 .more {
   display: contents;
 }
-.menu-toggle {
+.menu-toggle,
+.menu-backdrop {
   display: none;
 }
 .layout {
@@ -241,6 +270,12 @@ function quit() {
   }
   .menu-toggle {
     display: inline-block;
+  }
+  /* Invisible, under the menu: a tap anywhere else closes it. */
+  .menu-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
   }
   .more {
     display: none;

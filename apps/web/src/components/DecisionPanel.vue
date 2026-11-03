@@ -119,6 +119,8 @@ const onBoard = computed(() => ['placeBuilding', 'placeNeutral'].includes(pendin
 <template>
   <section class="decision">
     <h2>{{ who }}: {{ question }}</h2>
+    <!-- One-column layout: GameScreen puts the board here when a space is to be tapped. -->
+    <div v-if="$slots.board" class="board-slot"><slot name="board" /></div>
 
     <template v-if="pending.kind === 'turn'">
       <div v-if="selected && bidsHere.length" class="bid">
@@ -202,6 +204,20 @@ const onBoard = computed(() => ['placeBuilding', 'placeNeutral'].includes(pendin
 }
 .bonus-card {
   margin-top: 0.75rem;
+}
+.board-slot {
+  margin: 0.5rem 0 0.75rem;
+}
+/* Phone: two columns of smaller buttons, so the choices fit without scrolling. */
+@media (max-width: 600px) {
+  .options {
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.4rem;
+  }
+  .options .big {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.9rem;
+  }
 }
 .bonus-card h3 {
   margin: 0;

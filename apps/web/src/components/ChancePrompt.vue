@@ -12,7 +12,13 @@ import {
   type GameState,
   type Move,
 } from '@brux/engine';
-import { bonusCardLabel, chanceLabel, COMPASS_TILE_LABELS, stripLabel } from '../game/labels';
+import {
+  bonusCardLabel,
+  chanceLabel,
+  COMPASS_TILE_LABELS,
+  splitLabel,
+  stripLabel,
+} from '../game/labels';
 import type { SeatConfig } from '../game/session';
 
 const props = defineProps<{ state: GameState; event: ChanceEvent; seats: SeatConfig[] }>();
@@ -166,6 +172,10 @@ function pick(choice: string) {
   picked.value = [];
 }
 
+function labelParts(move: Move) {
+  return splitLabel(chanceLabel(props.state, move));
+}
+
 function choiceLabel(choice: string) {
   return props.event.kind === 'arrangeStrips'
     ? `Strip ${choice}: ${stripLabel(choice)}`
@@ -231,8 +241,14 @@ function choiceLabel(choice: string) {
     </template>
 
     <div v-else class="options">
-      <button v-for="(move, i) in outcomes" :key="i" class="big" @click="emit('enter', move)">
-        {{ chanceLabel(state, move) }}
+      <button
+        v-for="(move, i) in outcomes"
+        :key="i"
+        class="big outcome"
+        @click="emit('enter', move)"
+      >
+        <strong>{{ labelParts(move).main }}</strong>
+        <small v-if="labelParts(move).detail">{{ labelParts(move).detail }}</small>
       </button>
     </div>
   </section>
@@ -303,5 +319,28 @@ function choiceLabel(choice: string) {
 }
 .picked {
   margin: 0.25rem 0;
+}
+.outcome {
+  display: grid;
+  align-content: center;
+  gap: 0.1rem;
+}
+.outcome strong {
+  font-weight: 600;
+}
+.outcome small {
+  color: var(--color-muted);
+  font-size: 0.8em;
+}
+/* Phone: two columns of smaller buttons, so the choices fit without scrolling. */
+@media (max-width: 600px) {
+  .options {
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: 0.4rem;
+  }
+  .options .big {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.9rem;
+  }
 }
 </style>

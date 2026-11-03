@@ -20,7 +20,9 @@ pnpm --filter web build   # static files in apps/web/dist
 
 **Suggestions** (in the toolbar, and on the start screen) opens the suggestion box: a bug or an idea, a title, a description and an optional name. It becomes an issue on GitHub. A bug report sent during a game can attach the game (the setup and every move), so it can be replayed.
 
-**On a phone** (narrower than 600px) the toolbar keeps the round, **Undo**, **Redo** and a **Menu** button; Export, New game and Suggestions are in the menu. The board shrinks to fit the screen width.
+**On a phone** (narrower than 600px) the toolbar keeps the round, **Undo**, **Redo** and a **Menu** button; Export, New game and Suggestions are in the menu. The board shrinks to fit the screen width. Tap outside the menu (or press Escape) to close it.
+
+**One-column layout** (narrower than 900px: phones and portrait tablets): when a human has to tap a board space, the board moves into the question panel, between the question and the bid, so there is no scrolling between tapping and bidding. Long choice lists show two columns of smaller buttons on a phone, with details (Manneken Pis, VP symbols, a Public Figure's cost) on a smaller second line.
 
 **Undo** goes back to before the last thing a human entered (a decision or a draw), bot moves included. **Redo** plays it again. **Export** downloads the game as JSON; **Import** on the start screen loads one.
 
