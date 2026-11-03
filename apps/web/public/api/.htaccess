@@ -1,0 +1,5 @@
+# The GitHub token for the suggestion box. PHP files print nothing when
+# fetched, but keep the config out of reach anyway (Apache web hotels).
+<Files "feedback-config.php">
+  Require all denied
+</Files>

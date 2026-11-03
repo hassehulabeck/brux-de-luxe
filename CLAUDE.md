@@ -69,7 +69,8 @@ Run `pnpm check && pnpm test` before telling Hans a task is done. If you add a s
 ## Deployment
 
 - `ci.yml`: check + test on every push and PR.
-- `deploy.yml`: on push to `main`, build `apps/web` and upload `apps/web/dist` to the web hotel via SFTP (`lftp`). Secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`, optional `FTP_PORT` (default 22). Never commit credentials.
+- `deploy.yml`: on push to `main`, build `apps/web` and upload `apps/web/dist` to the web hotel via SFTP (`lftp`). Secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`, optional `FTP_PORT` (default 22), optional `FEEDBACK_GITHUB_TOKEN` (the suggestion box, `apps/web/public/api/feedback.php`, see `docs/web.md`). Never commit credentials.
+- The only server-side code on the web hotel is the suggestion box's `feedback.php`.
 - Railway is reserved for an optional later log/weights API (Phase 7). Don't add a backend before that.
 
 ## Git

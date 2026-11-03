@@ -10,6 +10,7 @@ import DecisionPanel from './DecisionPanel.vue';
 import GameOver from './GameOver.vue';
 import PlayersView from './PlayersView.vue';
 import SharedView from './SharedView.vue';
+import SuggestionBox from './SuggestionBox.vue';
 import WorkshopView from './WorkshopView.vue';
 
 const game = useGameStore();
@@ -74,6 +75,7 @@ function quit() {
       <button class="big" :disabled="!game.canRedo" @click="game.redo()">Redo</button>
       <button class="big" @click="exportGame">Export</button>
       <button class="big" @click="quit">New game</button>
+      <SuggestionBox />
     </header>
 
     <p v-if="game.error" class="error">{{ game.error }}</p>
