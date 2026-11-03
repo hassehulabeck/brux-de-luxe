@@ -101,3 +101,11 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - A bug sent during a game can attach the game (setup and moves) plus recent browser errors. The file goes to the `bug-reports` branch, and **Import** opens it.
 - Server side: `apps/web/public/api/feedback.php` on the web hotel (no new backend). Validation, a honeypot, 5 reports per visitor per 10 minutes. Token from the new `FEEDBACK_GITHUB_TOKEN` secret, written by `deploy.yml`.
 - Tests: the report the app builds and sends, and the PHP script against a fake GitHub API.
+
+## Phone layout (2026-11-03)
+
+- The Art Nouveau board fits a phone screen: the columns no longer grow with long action names (the page used to scroll sideways at 390px wide), and the spaces get smaller text below 600px.
+- Phone toolbar: one row with the round, Undo, Redo and a Menu (Export, New game, Suggestions).
+- Slightly smaller base font and less padding below 600px. The tablet layout is unchanged.
+- The suggestion dialog is teleported to `<body>`, so it still shows when its button sits in the closed menu.
+- Checked in headless Chrome at 360, 390 and 1024px wide: setup, human turn with a bid, bot turn, the menu and the suggestion box.

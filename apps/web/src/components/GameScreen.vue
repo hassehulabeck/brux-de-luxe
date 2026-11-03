@@ -28,6 +28,8 @@ const moves = computed(() =>
 
 // Board taps: choosing a space for a turn, a Building or a neutral Assistant.
 const selected = ref<ArtNouveauSpace | null>(null);
+// Phones: Export, New game and Suggestions sit behind a Menu button.
+const menuOpen = ref(false);
 watch(state, () => (selected.value = null));
 const boardTargets = computed(() => {
   const spaces = moves.value.flatMap((m) =>
@@ -73,9 +75,19 @@ function quit() {
       <span class="spacer" />
       <button class="big" :disabled="!game.canUndo" @click="game.undo()">Undo</button>
       <button class="big" :disabled="!game.canRedo" @click="game.redo()">Redo</button>
-      <button class="big" @click="exportGame">Export</button>
-      <button class="big" @click="quit">New game</button>
-      <SuggestionBox />
+      <button
+        class="big menu-toggle"
+        :aria-expanded="menuOpen"
+        aria-controls="game-menu"
+        @click="menuOpen = !menuOpen"
+      >
+        Menu
+      </button>
+      <div id="game-menu" class="more" :class="{ open: menuOpen }" @click="menuOpen = false">
+        <button class="big" @click="exportGame">Export</button>
+        <button class="big" @click="quit">New game</button>
+        <SuggestionBox />
+      </div>
     </header>
 
     <p v-if="game.error" class="error">{{ game.error }}</p>
@@ -167,6 +179,12 @@ function quit() {
 .spacer {
   flex: 1;
 }
+.more {
+  display: contents;
+}
+.menu-toggle {
+  display: none;
+}
 .layout {
   display: grid;
   gap: 0.75rem;
@@ -204,6 +222,44 @@ function quit() {
   .layout {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'notes' 'panel' 'board' 'players';
+  }
+}
+/* Phone: one toolbar row (round, Undo, Redo, Menu) and less padding. */
+@media (max-width: 600px) {
+  .toolbar {
+    position: sticky;
+    flex-wrap: nowrap;
+    padding: 0.4rem 0.5rem;
+    gap: 0.35rem;
+  }
+  .toolbar strong {
+    font-size: 0.9rem;
+    line-height: 1.15;
+  }
+  .toolbar .big {
+    padding: 0.4rem 0.7rem;
+  }
+  .menu-toggle {
+    display: inline-block;
+  }
+  .more {
+    display: none;
+  }
+  .more.open {
+    position: absolute;
+    top: 100%;
+    right: 0.5rem;
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.5rem;
+    background: var(--color-card);
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.15);
+  }
+  .layout {
+    gap: 0.5rem;
+    padding: 0.5rem;
   }
 }
 </style>
