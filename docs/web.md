@@ -20,6 +20,8 @@ pnpm --filter web build   # static files in apps/web/dist
 
 **Suggestions** (in the toolbar, and on the start screen) opens the suggestion box: a bug or an idea, a title, a description and an optional name. It becomes an issue on GitHub. A bug report sent during a game can attach the game (the setup and every move), so it can be replayed.
 
+**On a phone** (narrower than 600px) the toolbar keeps the round, **Undo**, **Redo** and a **Menu** button; Export, New game and Suggestions are in the menu. The board shrinks to fit the screen width.
+
 **Undo** goes back to before the last thing a human entered (a decision or a draw), bot moves included. **Redo** plays it again. **Export** downloads the game as JSON; **Import** on the start screen loads one.
 
 ## How it is built

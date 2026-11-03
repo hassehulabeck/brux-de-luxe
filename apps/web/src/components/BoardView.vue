@@ -77,8 +77,15 @@ function colorOf(player: number) {
 <style scoped>
 .board {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* minmax(0, …): long action names wrap instead of widening the board. */
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 4px;
+}
+.action {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+  text-align: center;
 }
 .space {
   min-height: 4.5rem;
@@ -134,5 +141,20 @@ function colorOf(player: number) {
   padding: 0.25rem;
   border: 1px dashed var(--color-line);
   border-radius: 4px;
+}
+/* Phone: five spaces must fit in about 350px. */
+@media (max-width: 600px) {
+  .board {
+    gap: 3px;
+  }
+  .space {
+    min-height: 3.75rem;
+    padding: 0.2rem 0.1rem;
+    font-size: 0.62rem;
+  }
+  .assistant {
+    flex-direction: column;
+    gap: 0.1rem;
+  }
 }
 </style>

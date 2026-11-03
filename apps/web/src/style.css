@@ -79,6 +79,20 @@ select {
   padding: 0 1rem;
 }
 
+/* Phone: a little smaller, and less padding, so more fits on the screen. */
+@media (max-width: 600px) {
+  :root {
+    font-size: 16px;
+  }
+  .card {
+    padding: 0.6rem 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+  .error {
+    padding: 0 0.5rem;
+  }
+}
+
 .badge {
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;

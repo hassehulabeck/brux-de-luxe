@@ -86,98 +86,101 @@ async function send() {
 <template>
   <button class="big" @click="open">Suggestions</button>
 
-  <dialog ref="dialog" class="suggestion-box" aria-labelledby="suggestion-box-title">
-    <template v-if="status.s === 'sent'">
-      <h2 id="suggestion-box-title">Thanks!</h2>
-      <p>It's now issue #{{ status.issue }}. We'll have a look.</p>
-      <div class="actions">
-        <button class="big primary" @click="close">Back to the game</button>
-        <button class="big" @click="open">Send another</button>
-      </div>
-    </template>
+  <!-- In <body>, so the dialog still shows when the button sits in a menu that closes. -->
+  <Teleport to="body">
+    <dialog ref="dialog" class="suggestion-box" aria-labelledby="suggestion-box-title">
+      <template v-if="status.s === 'sent'">
+        <h2 id="suggestion-box-title">Thanks!</h2>
+        <p>It's now issue #{{ status.issue }}. We'll have a look.</p>
+        <div class="actions">
+          <button class="big primary" @click="close">Back to the game</button>
+          <button class="big" @click="open">Send another</button>
+        </div>
+      </template>
 
-    <form v-else method="dialog" @submit.prevent="send">
-      <h2 id="suggestion-box-title">Suggestion box</h2>
-      <p class="hint">Found a bug or have an idea? It goes straight to the to-do list.</p>
+      <form v-else method="dialog" @submit.prevent="send">
+        <h2 id="suggestion-box-title">Suggestion box</h2>
+        <p class="hint">Found a bug or have an idea? It goes straight to the to-do list.</p>
 
-      <div class="mode" role="radiogroup" aria-label="What is it?">
-        <label :class="{ on: form.kind === 'bug' }">
-          <input v-model="form.kind" type="radio" name="kind" value="bug" />
-          🐞 A bug
+        <div class="mode" role="radiogroup" aria-label="What is it?">
+          <label :class="{ on: form.kind === 'bug' }">
+            <input v-model="form.kind" type="radio" name="kind" value="bug" />
+            🐞 A bug
+          </label>
+          <label :class="{ on: form.kind === 'idea' }">
+            <input v-model="form.kind" type="radio" name="kind" value="idea" />
+            💡 An idea
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Title</span>
+          <input
+            v-model="form.title"
+            type="text"
+            required
+            minlength="3"
+            :maxlength="TITLE_MAX"
+            :placeholder="
+              form.kind === 'bug' ? 'The bot placed an Assistant on…' : 'It would be nice if…'
+            "
+          />
         </label>
-        <label :class="{ on: form.kind === 'idea' }">
-          <input v-model="form.kind" type="radio" name="kind" value="idea" />
-          💡 An idea
-        </label>
-      </div>
 
-      <label class="field">
-        <span>Title</span>
+        <label class="field">
+          <span>Tell us more</span>
+          <textarea
+            v-model="form.description"
+            required
+            :maxlength="DESCRIPTION_MAX"
+            rows="6"
+            :placeholder="
+              form.kind === 'bug'
+                ? 'What did you do, what happened, and what did you expect?'
+                : 'Describe your idea.'
+            "
+          />
+        </label>
+
+        <label class="field">
+          <span>Your name (optional)</span>
+          <input v-model="form.name" type="text" :maxlength="NAME_MAX" autocomplete="name" />
+        </label>
+
+        <!-- Honeypot: hidden from people, filled in by bots. -->
         <input
-          v-model="form.title"
-          type="text"
-          required
-          minlength="3"
-          :maxlength="TITLE_MAX"
-          :placeholder="
-            form.kind === 'bug' ? 'The bot placed an Assistant on…' : 'It would be nice if…'
-          "
+          v-model="form.website"
+          class="hp"
+          name="website"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
         />
-      </label>
 
-      <label class="field">
-        <span>Tell us more</span>
-        <textarea
-          v-model="form.description"
-          required
-          :maxlength="DESCRIPTION_MAX"
-          rows="6"
-          :placeholder="
-            form.kind === 'bug'
-              ? 'What did you do, what happened, and what did you expect?'
-              : 'Describe your idea.'
-          "
-        />
-      </label>
+        <label v-if="form.kind === 'bug' && game.session" class="attach">
+          <input v-model="form.attach" type="checkbox" />
+          Attach this game ({{ game.session.moves.length }} moves) so the bug can be replayed
+        </label>
 
-      <label class="field">
-        <span>Your name (optional)</span>
-        <input v-model="form.name" type="text" :maxlength="NAME_MAX" autocomplete="name" />
-      </label>
+        <p v-if="status.s === 'error'" class="error">{{ status.msg }}</p>
 
-      <!-- Honeypot: hidden from people, filled in by bots. -->
-      <input
-        v-model="form.website"
-        class="hp"
-        name="website"
-        tabindex="-1"
-        autocomplete="off"
-        aria-hidden="true"
-      />
-
-      <label v-if="form.kind === 'bug' && game.session" class="attach">
-        <input v-model="form.attach" type="checkbox" />
-        Attach this game ({{ game.session.moves.length }} moves) so the bug can be replayed
-      </label>
-
-      <p v-if="status.s === 'error'" class="error">{{ status.msg }}</p>
-
-      <div class="actions">
-        <button class="big primary" type="submit" :disabled="!canSend">
-          {{ status.s === 'sending' ? 'Sending…' : 'Send' }}
-        </button>
-        <button class="big" type="button" @click="close">Cancel</button>
-      </div>
-      <p class="hint note">
-        Heads up: suggestions{{
-          form.attach && form.kind === 'bug' && game.session
-            ? ' and attached games (with player names)'
-            : ''
-        }}
-        are public on GitHub.
-      </p>
-    </form>
-  </dialog>
+        <div class="actions">
+          <button class="big primary" type="submit" :disabled="!canSend">
+            {{ status.s === 'sending' ? 'Sending…' : 'Send' }}
+          </button>
+          <button class="big" type="button" @click="close">Cancel</button>
+        </div>
+        <p class="hint note">
+          Heads up: suggestions{{
+            form.attach && form.kind === 'bug' && game.session
+              ? ' and attached games (with player names)'
+              : ''
+          }}
+          are public on GitHub.
+        </p>
+      </form>
+    </dialog>
+  </Teleport>
 </template>
 
 <style scoped>
