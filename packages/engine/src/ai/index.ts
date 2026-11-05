@@ -6,6 +6,8 @@ export {
   BONUS_EFFECT_NAMES,
   BRUSSELS_ACTION_NAMES,
   COMPASS_TILE_NAMES,
+  TUCK_ROW_NAMES,
+  tuckRowLabel,
 } from './explain';
 export { randomBot } from './bots/random';
 export { greedyBot } from './bots/greedy';
