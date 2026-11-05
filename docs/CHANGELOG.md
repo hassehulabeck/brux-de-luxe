@@ -116,3 +116,7 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - **The phone menu closes** with a tap outside it or Escape.
 - **Compact choices on phones:** two columns of smaller buttons. Long chance labels are split by `splitLabel()` into a bold first line and a smaller detail line ("City Hall +1" / "1 Manneken Pis · 1 VP symbol", "Ernest Solvay" / "costs 2 BF").
 - Checked in headless Chrome at 390px (turn, bid, menu, Public Figures, Bonus cards), 820px portrait and 1180px landscape (board stays in its own card there).
+
+## Tuck row names (2026-11-05)
+
+- Tucking a Bonus card now names the row and what it scores, e.g. "row 1 (money)", "row 2 (Works of Art)", "row 3 (Public Figures)", "row 4 (Assistants)". This applies to bot instructions, bot reasons, decision logs and the human buttons.

@@ -5,6 +5,7 @@ import {
   BONUS_EFFECT_NAMES,
   cannotPerformReason,
   describeMove,
+  tuckRowLabel,
   type ArtNouveauSpace,
   type GameState,
   type Move,
@@ -109,7 +110,9 @@ function bonusOption(move: Move): string {
     // A single or double card: the power is the first part of the card's label.
     return `Use: ${move.choice ? BONUS_EFFECT_NAMES[move.choice] : bonusCardLabel(card).split(' · ')[0]}`;
   }
-  return move.kind === 'tuckBonus' ? `Tuck under row ${move.row}` : describeMove(props.state, move);
+  return move.kind === 'tuckBonus'
+    ? `Tuck under ${tuckRowLabel(move.row)}`
+    : describeMove(props.state, move);
 }
 
 /** Decisions made on the board itself: GameScreen handles the taps. */
