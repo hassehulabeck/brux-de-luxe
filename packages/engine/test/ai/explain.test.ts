@@ -61,4 +61,17 @@ describe('Bonus card moves name the column', () => {
     expect(texts.some((t) => t.startsWith('Column 2 Bonus card'))).toBe(true);
     expect(texts.some((t) => t.startsWith('Column 4 Bonus card'))).toBe(true);
   });
+
+  it('a tuck names both the row number and what the row scores', () => {
+    const start = edit(gameAtFirstTurn(), (draft) => {
+      placeAssistant(draft, { row: 0, col: 1 }, 0);
+      placeAssistant(draft, { row: 0, col: 3 }, 0);
+    });
+    const state = everyonePasses(start);
+    const tuck = (row: 1 | 2 | 3 | 4) => describeMove(state, { kind: 'tuckBonus', card: 0, row });
+    expect(tuck(1)).toContain('tuck it under row 1 (money)');
+    expect(tuck(2)).toContain('tuck it under row 2 (Works of Art)');
+    expect(tuck(3)).toContain('tuck it under row 3 (Public Figures)');
+    expect(tuck(4)).toContain('tuck it under row 4 (Assistants)');
+  });
 });

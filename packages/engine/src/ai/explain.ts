@@ -42,6 +42,19 @@ export const BONUS_EFFECT_NAMES: Record<BonusEffect, string> = {
   architect: 'Architect +1',
 };
 
+/** What each tuck row of the Architect board scores (rows 1–4, p. 9). */
+export const TUCK_ROW_NAMES: Record<1 | 2 | 3 | 4, string> = {
+  1: 'money',
+  2: 'Works of Art',
+  3: 'Public Figures',
+  4: 'Assistants',
+};
+
+/** "row 1 (money)": number and category, so the rows are hard to mix up at the table. */
+export function tuckRowLabel(row: 1 | 2 | 3 | 4): string {
+  return `row ${row} (${TUCK_ROW_NAMES[row]})`;
+}
+
 /** Spaces are shown 1-based, row 1 at the top, as a player would count them. */
 function space({ row, col }: { row: number; col: number }): string {
   return `row ${row + 1}, column ${col + 1}`;
@@ -132,7 +145,7 @@ export function describeMove(state: GameState, move: Move): string {
         ? `${bonusCard(state, move.card)}: ${BONUS_EFFECT_NAMES[move.choice]}`
         : `${bonusCard(state, move.card)}: ${bonusPower(state, move.card)}`;
     case 'tuckBonus':
-      return `${bonusCard(state, move.card)}: tuck it under row ${move.row}`;
+      return `${bonusCard(state, move.card)}: tuck it under ${tuckRowLabel(move.row)}`;
     case 'payPublicFigures':
       return move.unpaid.length === 0
         ? 'Pay for every Public Figure'

@@ -123,3 +123,6 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - **`game/game-log.ts`:** start and end events, a retry queue in `localStorage` for tables without Wi-Fi, and an opt-out. Every new game gets a `gameId` in its `SessionConfig`. Games saved before this have none and are not logged.
 - **Start screen:** says what is logged, with a checkbox to switch it off on this device.
 - `deploy.yml` writes `games-config.php` from the secrets `GAMES_DB_HOST`, `GAMES_DB_NAME`, `GAMES_DB_USER` and `GAMES_DB_PASSWORD`. Setup and queries: `docs/web.md`.
+## Tuck row names (2026-11-05)
+
+- Tucking a Bonus card now names the row and what it scores, e.g. "row 1 (money)", "row 2 (Works of Art)", "row 3 (Public Figures)", "row 4 (Assistants)". This applies to bot instructions, bot reasons, decision logs and the human buttons.
