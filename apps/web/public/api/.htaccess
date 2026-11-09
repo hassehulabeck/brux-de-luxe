@@ -1,5 +1,6 @@
-# The GitHub token for the suggestion box. PHP files print nothing when
-# fetched, but keep the config out of reach anyway (Apache web hotels).
-<Files "feedback-config.php">
+# Secrets for the suggestion box (GitHub token) and the game log (database).
+# PHP files print nothing when fetched, but keep them out of reach anyway
+# (Apache web hotels).
+<FilesMatch "^(feedback|games)-config\.php$">
   Require all denied
-</Files>
+</FilesMatch>
