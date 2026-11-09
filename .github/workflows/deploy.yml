@@ -4,7 +4,9 @@ name: Deploy
 # to main. Needs these repository secrets (Settings → Secrets → Actions):
 # FTP_SERVER (host name only), FTP_USERNAME, FTP_PASSWORD and FTP_SERVER_DIR
 # (the folder on the server). Optional: FTP_PORT (default 22), and
-# FEEDBACK_GITHUB_TOKEN for the suggestion box (see docs/web.md).
+# FEEDBACK_GITHUB_TOKEN for the suggestion box, and GAMES_DB_HOST,
+# GAMES_DB_NAME, GAMES_DB_USER and GAMES_DB_PASSWORD for the game log
+# (see docs/web.md).
 # Until they are set, the workflow builds and skips the upload.
 
 on:
@@ -22,6 +24,7 @@ jobs:
     env:
       FTP_SERVER: ${{ secrets.FTP_SERVER }}
       FEEDBACK_GITHUB_TOKEN: ${{ secrets.FEEDBACK_GITHUB_TOKEN }}
+      GAMES_DB_HOST: ${{ secrets.GAMES_DB_HOST }}
     steps:
       - uses: actions/checkout@v7
 
@@ -46,6 +49,18 @@ jobs:
         run: |
           php -r 'echo "<?php\nreturn " . var_export(["token" => trim(getenv("FEEDBACK_GITHUB_TOKEN")), "repo" => getenv("REPO")], true) . ";\n";' \
             > apps/web/dist/api/feedback-config.php
+
+      # The game log (dist/api/games.php) stores one row per game in MySQL.
+      # Without the secrets it answers "off" and the app keeps its queue.
+      - name: Game log config
+        if: env.GAMES_DB_HOST != ''
+        env:
+          GAMES_DB_NAME: ${{ secrets.GAMES_DB_NAME }}
+          GAMES_DB_USER: ${{ secrets.GAMES_DB_USER }}
+          GAMES_DB_PASSWORD: ${{ secrets.GAMES_DB_PASSWORD }}
+        run: |
+          php -r '$e = fn($k) => trim(getenv($k)); echo "<?php\nreturn " . var_export(["dsn" => "mysql:host={$e("GAMES_DB_HOST")};dbname={$e("GAMES_DB_NAME")};charset=utf8mb4", "user" => $e("GAMES_DB_USER"), "password" => $e("GAMES_DB_PASSWORD")], true) . ";\n";' \
+            > apps/web/dist/api/games-config.php
 
       # lftp mirrors dist/ to the server folder over SFTP (SSH). It only adds
       # and replaces files; nothing on the server is deleted.

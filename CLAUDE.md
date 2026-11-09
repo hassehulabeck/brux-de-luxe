@@ -69,8 +69,9 @@ Run `pnpm check && pnpm test` before telling Hans a task is done. If you add a s
 ## Deployment
 
 - `ci.yml`: check + test on every push and PR.
-- `deploy.yml`: on push to `main`, build `apps/web` and upload `apps/web/dist` to the web hotel via SFTP (`lftp`). Secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`, optional `FTP_PORT` (default 22), optional `FEEDBACK_GITHUB_TOKEN` (the suggestion box, `apps/web/public/api/feedback.php`, see `docs/web.md`). Never commit credentials.
-- The only server-side code on the web hotel is the suggestion box's `feedback.php`.
+- `deploy.yml`: on push to `main`, build `apps/web` and upload `apps/web/dist` to the web hotel via SFTP (`lftp`). Secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`, optional `FTP_PORT` (default 22), optional `FEEDBACK_GITHUB_TOKEN` (the suggestion box, `apps/web/public/api/feedback.php`, see `docs/web.md`), optional `GAMES_DB_HOST`, `GAMES_DB_NAME`, `GAMES_DB_USER`, `GAMES_DB_PASSWORD` (the game log, `apps/web/public/api/games.php`, MySQL on the web hotel). Never commit credentials.
+- The only server-side code on the web hotel is the suggestion box's `feedback.php` and the game log's `games.php`.
+- The game log stores no names and only the network part of an IP address (IPv4 /24, IPv6 /48). Keep it that way: it is what the start screen promises.
 - Railway is reserved for an optional later log/weights API (Phase 7). Don't add a backend before that.
 
 ## Git

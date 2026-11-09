@@ -60,3 +60,33 @@ An attached game opens with **Import** on the start screen, just like an export.
 **Setup:** create a fine-grained GitHub token for `hassehulabeck/brux-de-luxe` only, with **Issues: Read and write** and **Contents: Read and write** (for the `bug-reports` branch). Add it as the repository secret `FEEDBACK_GITHUB_TOKEN`. `deploy.yml` then writes `dist/api/feedback-config.php`, which returns the token, and uploads it with the rest; `api/.htaccess` keeps it out of reach. Without the secret the box answers "The suggestion box is closed for now." The web hotel needs PHP 8.1 or later with curl.
 
 `test/feedback-php.test.ts` runs the script with PHP's built-in server against a fake GitHub API (skipped when `php` is not installed).
+
+## The game log
+
+The app tells `public/api/games.php` (next to the suggestion box) when a game starts and when it ends. The server keeps **one row per game** in MySQL on the web hotel, table `games`:
+
+| Column                                 | What                                                                                                                                |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `game_id`                              | A random UUID made at **Start the game**. It is saved with the game (`SessionConfig.gameId`), so a reload is not a new game.        |
+| `ip_network`                           | Rough geography: the visitor's address with the end zeroed (IPv4 /24, `203.0.113.0`; IPv6 /48). The whole address is never stored.  |
+| `app_commit`                           | The build.                                                                                                                          |
+| `player_count`, `seats`                | Number of seats, and each seat's color and bot level (`null` for a human), as JSON. No names.                                       |
+| `started_at`, `ended_at`               | The device's clock, in UTC. These are the real times even if the event was sent later.                                              |
+| `start_received_at`, `end_received_at` | The server's clock, in UTC.                                                                                                         |
+| `moves`, `winning_score`               | Number of moves, and the highest total.                                                                                             |
+| `scores`                               | Every seat's whole final score as JSON: track, buildings, rows 1–4, noble materials, Manneken Pis, total, with color and bot level. |
+
+A row with a start and no end is a game that was not finished (or not yet). Ending again after an undo replaces the result. The script creates the table on its first request.
+
+**Offline:** events wait in a queue in `localStorage` (`game/game-log.ts`) and are sent at the next start-up, when the browser comes back online, or with the next event. An event leaves the queue when the server took it or refused it for good (4xx); offline, 429 and 5xx keep it. The queue holds at most 50 events. Logging never blocks or breaks play.
+
+**Opt-out:** the start screen says what is logged, with a checkbox that is on by default. Switching it off on a device sends nothing more and forgets what was waiting.
+
+**Setup:** in the web hotel's control panel, create a MySQL database and a user with access to it. Add the repository secrets `GAMES_DB_HOST`, `GAMES_DB_NAME`, `GAMES_DB_USER` and `GAMES_DB_PASSWORD`. `deploy.yml` then writes `dist/api/games-config.php`; `api/.htaccess` keeps it out of reach. Without the secrets the log answers 503 and the app keeps its queue until the log is switched on. Read the data in phpMyAdmin, for example:
+
+```sql
+SELECT started_at, ended_at, player_count, winning_score, ip_network
+FROM games WHERE ended_at IS NOT NULL ORDER BY started_at DESC;
+```
+
+`test/games-php.test.ts` runs the script with PHP's built-in server against an SQLite file. The SQL is plain enough for both. It is skipped when `php` or `pdo_sqlite` is missing.
