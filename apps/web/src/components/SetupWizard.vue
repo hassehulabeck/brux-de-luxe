@@ -86,6 +86,18 @@ async function importFile(event: Event) {
         The app then asks how the board was set up: the Action strips, the compass tiles, the Public
         Figures, the starting Works of Art and the Bonus cards.
       </p>
+      <label class="log-choice">
+        <input
+          type="checkbox"
+          :checked="!game.logOff"
+          @change="game.setGameLogOff(!($event.target as HTMLInputElement).checked)"
+        />
+        <span>
+          Log my games to help improve the bots: start and end time, the seats' colors and bot
+          levels, the final scores and roughly where (from the network address, never the full
+          address). No names.
+        </span>
+      </label>
     </section>
 
     <section class="card">
@@ -123,5 +135,17 @@ async function importFile(event: Event) {
 }
 .seat input {
   flex: 1 1 8rem;
+}
+.log-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  color: var(--color-muted);
+}
+.log-choice input {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
 }
 </style>

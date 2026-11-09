@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
 import { legalMoves, seededOracle } from '@brux/engine';
 import { whoActs } from '../src/game/session';
@@ -6,8 +6,29 @@ import { useGameStore } from '../src/stores/game';
 
 describe('game store', () => {
   beforeEach(() => setActivePinia(createPinia()));
+  afterEach(() => vi.unstubAllGlobals());
 
-  it('plays a whole game: the table answers chance, the human taps, bots move and wait for Done', () => {
+  /** A browser's localStorage and a server that takes every game log event. */
+  function fakeBrowser() {
+    const data = new Map<string, string>();
+    vi.stubGlobal('localStorage', {
+      getItem: (k: string) => data.get(k) ?? null,
+      setItem: (k: string, v: string) => void data.set(k, v),
+      removeItem: (k: string) => void data.delete(k),
+    });
+    const sent: { event: string; gameId: string; moves?: number }[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url: string, init: { body: string }) => {
+        sent.push(JSON.parse(init.body));
+        return { status: 200 };
+      }),
+    );
+    return { sent };
+  }
+
+  it('plays a whole game: the table answers chance, the human taps, bots move and wait for Done', async () => {
+    const { sent } = fakeBrowser();
     const game = useGameStore();
     game.newGame({
       seats: [
@@ -42,7 +63,32 @@ describe('game store', () => {
     expect(botTurns).toBeGreaterThan(10);
     // Shield scorings are told to the table, so nobody has to count majorities.
     expect(tableNotes.some((note) => note.startsWith('Shield '))).toBe(true);
+
+    // The game log heard about the start and the end, once each.
+    const gameId = game.session!.config.gameId;
+    await vi.waitFor(() => expect(sent.map((e) => e.event)).toEqual(['start', 'end']));
+    expect(sent.every((e) => e.gameId === gameId)).toBe(true);
+    expect(sent[1]!.moves).toBe(game.session!.moves.length);
+
+    // Loading the finished game again is not a second ending.
+    game.importJson(game.exportJson());
+    game.flushGameLog();
+    await new Promise((r) => setTimeout(r, 10));
+    expect(sent).toHaveLength(2);
   }, 60_000);
+
+  it('logs nothing when the players switched the log off', async () => {
+    const { sent } = fakeBrowser();
+    const game = useGameStore();
+    game.setGameLogOff(true);
+    game.newGame({
+      seats: [0, 1].map((i) => ({ name: `P${i}`, color: `c${i}`, bot: null })),
+      seed: 1,
+    });
+    expect(game.session!.config.gameId).toBeTruthy();
+    await new Promise((r) => setTimeout(r, 10));
+    expect(sent).toEqual([]);
+  });
 
   it('shows an error instead of playing an illegal move', () => {
     const game = useGameStore();

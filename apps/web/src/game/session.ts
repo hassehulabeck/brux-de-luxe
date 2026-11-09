@@ -39,6 +39,11 @@ export interface SessionConfig {
   seats: SeatConfig[];
   /** Seed for the bots' own random choices. */
   seed: number;
+  /**
+   * A random id for the game log (game/game-log.ts). Saved with the game, so
+   * a reload is not a new game. Missing in games saved before the log.
+   */
+  gameId?: string;
 }
 
 /** One bot decision, as the table sees it. */
