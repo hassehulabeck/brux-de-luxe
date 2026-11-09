@@ -117,6 +117,12 @@ Hans played two rounds with 1 human and 2 bots. The export is kept as a test fix
 - **Compact choices on phones:** two columns of smaller buttons. Long chance labels are split by `splitLabel()` into a bold first line and a smaller detail line ("City Hall +1" / "1 Manneken Pis · 1 VP symbol", "Ernest Solvay" / "costs 2 BF").
 - Checked in headless Chrome at 390px (turn, bid, menu, Public Figures, Bonus cards), 820px portrait and 1180px landscape (board stays in its own card there).
 
+## Game log (2026-11-09)
+
+- **`public/api/games.php`:** one row per game in MySQL on the web hotel: start and end time (device and server clock), seats (color and bot level, no names), the build, number of moves, the winning score and every seat's whole final score. The IP address is stored only as its network (IPv4 /24, IPv6 /48), for rough geography. Rate limited to 30 events per client per 10 minutes. The table is created on the first request.
+- **`game/game-log.ts`:** start and end events, a retry queue in `localStorage` for tables without Wi-Fi, and an opt-out. Every new game gets a `gameId` in its `SessionConfig`. Games saved before this have none and are not logged.
+- **Start screen:** says what is logged, with a checkbox to switch it off on this device.
+- `deploy.yml` writes `games-config.php` from the secrets `GAMES_DB_HOST`, `GAMES_DB_NAME`, `GAMES_DB_USER` and `GAMES_DB_PASSWORD`. Setup and queries: `docs/web.md`.
 ## Tuck row names (2026-11-05)
 
 - Tucking a Bonus card now names the row and what it scores, e.g. "row 1 (money)", "row 2 (Works of Art)", "row 3 (Public Figures)", "row 4 (Assistants)". This applies to bot instructions, bot reasons, decision logs and the human buttons.

@@ -7,7 +7,19 @@
 import { defineStore } from 'pinia';
 import { markRaw } from 'vue';
 import { describeMove, type Bot, type GameState, type Move } from '@brux/engine';
-import { recordError } from '../game/feedback';
+import { APP_COMMIT, recordError } from '../game/feedback';
+import {
+  endEvent,
+  enqueue,
+  flush,
+  isLogOff,
+  newGameId,
+  sendWithFetch,
+  setLogOff,
+  startEvent,
+  type GameLogEvent,
+  type LogStorage,
+} from '../game/game-log';
 import { botInstruction, eventInstruction } from '../game/labels';
 import {
   botDecision,
@@ -28,6 +40,33 @@ import {
 } from '../game/session';
 
 const STORAGE_KEY = 'brux-de-luxe:game';
+
+/** localStorage, or null where there is none (tests, blocked storage). */
+function browserStorage(): LogStorage | null {
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage;
+  } catch {
+    return null;
+  }
+}
+
+/** One flush at a time; a running flush also picks up events queued meanwhile. */
+let flushing: Promise<void> | null = null;
+
+/** Queue a game log event (if any) and try to send the queue. Never throws. */
+function logGame(event: GameLogEvent | null): void {
+  const storage = browserStorage();
+  if (!storage) return;
+  if (event) enqueue(storage, event);
+  flushing ??= flush(storage, sendWithFetch)
+    .catch(() => {})
+    .finally(() => (flushing = null));
+}
+
+/** Which result was logged last: the game id and its number of moves. */
+function endKey(session: Session): string {
+  return `${session.config.gameId}:${session.moves.length}`;
+}
 
 export interface BotTurnStep {
   instruction: string;
@@ -52,6 +91,13 @@ export const useGameStore = defineStore('game', {
      */
     notes: [] as string[],
     error: null as string | null,
+    /** endKey() of the game over last sent to the game log, so it is sent once. */
+    endLogged: null as string | null,
+    /** The player switched the game log off on this device. */
+    logOff: (() => {
+      const storage = browserStorage();
+      return storage ? isLogOff(storage) : false;
+    })(),
   }),
 
   getters: {
@@ -76,7 +122,9 @@ export const useGameStore = defineStore('game', {
 
   actions: {
     newGame(config: SessionConfig) {
-      this.setSession(startSession(config));
+      const session = startSession({ ...config, gameId: newGameId() });
+      logGame(startEvent(session, new Date(), APP_COMMIT));
+      this.setSession(session);
     },
 
     /** A human seat's decision or a chance outcome the table entered. */
@@ -128,6 +176,27 @@ export const useGameStore = defineStore('game', {
         this.session = markRaw(next);
       }
       this.save();
+      this.logIfOver();
+    },
+
+    /** Tell the game log the result, once per ending (an undo can lead to another). */
+    logIfOver() {
+      if (!this.session || this.state?.pending?.kind !== 'gameOver') return;
+      const key = endKey(this.session);
+      if (this.endLogged === key) return;
+      this.endLogged = key;
+      logGame(endEvent(this.session, new Date()));
+    },
+
+    /** Send game log events that waited for a connection. */
+    flushGameLog() {
+      logGame(null);
+    },
+
+    setGameLogOff(off: boolean) {
+      const storage = browserStorage();
+      if (storage) setLogOff(storage, off);
+      this.logOff = off;
     },
 
     dismissNotes() {
@@ -174,6 +243,8 @@ export const useGameStore = defineStore('game', {
       this.botTurn = null;
       this.notes = [];
       this.error = null;
+      // A loaded or imported game that is already over was logged when it ended.
+      this.endLogged = current(session).pending?.kind === 'gameOver' ? endKey(session) : null;
       this.save();
       this.runBots();
     },
