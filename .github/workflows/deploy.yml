@@ -58,8 +58,10 @@ jobs:
           GAMES_DB_NAME: ${{ secrets.GAMES_DB_NAME }}
           GAMES_DB_USER: ${{ secrets.GAMES_DB_USER }}
           GAMES_DB_PASSWORD: ${{ secrets.GAMES_DB_PASSWORD }}
+          # Repository variable (not a secret): 1 turns on games.php's debug mode.
+          GAMES_DEBUG: ${{ vars.GAMES_DEBUG }}
         run: |
-          php -r '$e = fn($k) => trim(getenv($k)); echo "<?php\nreturn " . var_export(["dsn" => "mysql:host={$e("GAMES_DB_HOST")};dbname={$e("GAMES_DB_NAME")};charset=utf8mb4", "user" => $e("GAMES_DB_USER"), "password" => $e("GAMES_DB_PASSWORD")], true) . ";\n";' \
+          php -r '$e = fn($k) => trim(getenv($k)); echo "<?php\nreturn " . var_export(["dsn" => "mysql:host={$e("GAMES_DB_HOST")};dbname={$e("GAMES_DB_NAME")};charset=utf8mb4", "user" => $e("GAMES_DB_USER"), "password" => $e("GAMES_DB_PASSWORD"), "debug" => $e("GAMES_DEBUG") === "1"], true) . ";\n";' \
             > apps/web/dist/api/games-config.php
 
       # lftp mirrors dist/ to the server folder over SFTP (SSH). It only adds

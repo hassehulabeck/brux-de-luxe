@@ -16,6 +16,11 @@
  *   → 200 { "ok": true }
  *   → 4xx/5xx { "error": "..." }
  *
+ * Debug mode ('debug' => true in the config, set by the GAMES_DEBUG
+ * repository variable): a GET connects to the database and creates the
+ * table without storing anything, and server errors include the real
+ * message. Switch it off again afterwards: the messages name the database.
+ *
  * Privacy: the visitor's IP address is never stored whole, only its network
  * (IPv4 /24, IPv6 /48), which is enough for rough geography. Player names
  * are not sent at all.
@@ -69,12 +74,21 @@ try {
 } catch (Throwable $e) {
     error_log('games: ' . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Something went wrong on the server.']);
+    $error = 'Something went wrong on the server.';
+    if (debugMode()) {
+        $error .= ' ' . get_class($e) . ': ' . $e->getMessage();
+    }
+    echo json_encode(['error' => $error]);
 }
 
 function handle(): void
 {
-    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    $method = $_SERVER['REQUEST_METHOD'] ?? '';
+    if ($method === 'GET' && debugMode()) {
+        connect(loadConfig()); // throws with the real message if the database is out of reach
+        return;
+    }
+    if ($method !== 'POST') {
         throw new GameLogError('Send game events with POST.', 405);
     }
     $config = loadConfig();
@@ -108,7 +122,7 @@ function handle(): void
  * 'user' => ..., 'password' => ...]. Tests also set 'rate_dir' and 'client_key'
  * (which $_SERVER entry holds the visitor's address).
  *
- * @return array{dsn: string, user: string, password: string, rate_dir: string, client_key: string}
+ * @return array{dsn: string, user: string, password: string, rate_dir: string, client_key: string, debug: bool}
  */
 function loadConfig(): array
 {
@@ -123,7 +137,17 @@ function loadConfig(): array
         'password' => (string) ($config['password'] ?? ''),
         'rate_dir' => (string) ($config['rate_dir'] ?? sys_get_temp_dir()),
         'client_key' => (string) ($config['client_key'] ?? 'REMOTE_ADDR'),
+        'debug' => ($config['debug'] ?? false) === true,
     ];
+}
+
+function debugMode(): bool
+{
+    try {
+        return loadConfig()['debug'];
+    } catch (Throwable) {
+        return false;
+    }
 }
 
 // --- Checking the event ---------------------------------------------------------
