@@ -194,3 +194,62 @@ describe.skipIf(!hasPhp)('games.php', () => {
     expect(statuses[30]).toBe(429);
   });
 });
+
+describe.skipIf(!hasPhp)('games.php in debug mode', () => {
+  const servers: ChildProcess[] = [];
+  afterAll(() => servers.forEach((s) => s.kill()));
+
+  /** A server with its own config; returns the endpoint's URL. */
+  async function serve(config: string): Promise<string> {
+    const dir = mkdtempSync(join(tmpdir(), 'brux-games-debug-'));
+    const configPath = join(dir, 'config.php');
+    writeFileSync(configPath, `<?php return ${config.replaceAll('DIR', dir)};`);
+    const port = 20000 + Math.floor(Math.random() * 20000);
+    const url = `http://127.0.0.1:${port}/games.php`;
+    servers.push(
+      spawn('php', ['-S', `127.0.0.1:${port}`, '-t', resolve(__dirname, '../public/api')], {
+        env: { ...process.env, BRUX_GAMES_CONFIG: configPath },
+        stdio: 'ignore',
+      }),
+    );
+    for (let i = 0; i < 50; i++) {
+      try {
+        await fetch(url);
+        return url;
+      } catch {
+        await new Promise((r) => setTimeout(r, 100));
+      }
+    }
+    throw new Error('PHP server did not start');
+  }
+
+  it('a GET connects and creates the table', async () => {
+    const url = await serve(`['dsn' => 'sqlite:DIR/games.sqlite', 'debug' => true]`);
+    const res = await fetch(url);
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true });
+  });
+
+  it('shows the real database error', async () => {
+    const url = await serve(`['dsn' => 'sqlite:DIR/missing/games.sqlite', 'debug' => true]`);
+    const res = await fetch(url);
+    expect(res.status).toBe(500);
+    expect(((await res.json()) as { error: string }).error).toMatch(/PDOException: .+/);
+  });
+
+  it('keeps the error to itself without debug', async () => {
+    const url = await serve(`['dsn' => 'sqlite:DIR/missing/games.sqlite']`);
+    expect((await fetch(url)).status).toBe(405);
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        event: 'start',
+        gameId: '00000000-0000-4000-8000-000000000001',
+        at: new Date().toISOString(),
+        seats: [{ color: 'a' }, { color: 'b' }],
+      }),
+    });
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ error: 'Something went wrong on the server.' });
+  });
+});

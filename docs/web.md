@@ -89,4 +89,6 @@ SELECT started_at, ended_at, player_count, winning_score, ip_network
 FROM games WHERE ended_at IS NOT NULL ORDER BY started_at DESC;
 ```
 
+**Debugging the connection:** set the repository variable `GAMES_DEBUG` to `1` (Settings → Secrets and variables → Actions → Variables) and run the deploy. Then open `api/games.php` in a browser: `{"ok":true}` means it connected and the table exists; otherwise the error says why (wrong host, access denied...). Delete the variable and deploy again afterwards, because the messages name the database.
+
 `test/games-php.test.ts` runs the script with PHP's built-in server against an SQLite file. The SQL is plain enough for both. It is skipped when `php` or `pdo_sqlite` is missing.
